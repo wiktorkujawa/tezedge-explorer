@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { takeUntil, map, debounceTime, filter } from 'rxjs/operators';
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { VirtualScrollDirective } from '../../shared/virtual-scroll.directive';
 
 @Component({
   selector: 'app-mempool-action',
@@ -11,7 +12,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
   styleUrls: ['./mempool-action.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MempoolActionComponent implements OnInit, OnDestroy {
+export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public mempoolAction;
   public mempoolActionList = [];
@@ -25,11 +26,25 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
   public networkDataSource;
   public networkActionlastCursorId = 0;
 
+  public virtualScrollItems = [];
+
   @ViewChild(CdkVirtualScrollViewport) viewPort: CdkVirtualScrollViewport;
+
+  @ViewChild(VirtualScrollDirective) vrFor: VirtualScrollDirective;
 
   constructor(
     public store: Store<any>,
   ) { }
+
+
+  ngAfterViewInit() {
+
+    // TODO: temp remove
+    for (let i = 0; i < 1000001; i++) {
+      this.virtualScrollItems[i] = { id: i, name: 'ID-' + i };
+    }
+
+  }
 
   ngOnInit(): void {
 
@@ -64,9 +79,9 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
           console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
           this.networkActionlastCursorId = data.lastCursorId;
 
-          setTimeout(() => {
-            this.viewPort.scrollTo({ bottom: 0 });
-          });
+          // setTimeout(() => {
+          //   this.viewPort.scrollTo({ bottom: 0 });
+          // });
 
         }
 
@@ -96,6 +111,14 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
 
   }
+
+
+  scrollToItem() {
+
+    this.vrFor.scrollToItem(10000);
+
+  }
+
 }
 
 
