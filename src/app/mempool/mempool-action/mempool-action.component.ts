@@ -10,7 +10,7 @@ import { VirtualScrollDirective } from '../../shared/virtual-scroll.directive';
   selector: 'app-mempool-action',
   templateUrl: './mempool-action.component.html',
   styleUrls: ['./mempool-action.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -40,9 +40,11 @@ export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit 
   ngAfterViewInit() {
 
     // TODO: temp remove
-    for (let i = 0; i < 2700000; i++) {  // 2700000 //300000
-      this.virtualScrollItems[i] = { id: i };
-    }
+    // for (let i = 0; i < 2700000; i++) {  // 2700000 //300000
+    //   this.virtualScrollItems[i] = { id: i };
+    // }
+
+    this.virtualScrollItems[0] = { id : 0 };
 
   }
 

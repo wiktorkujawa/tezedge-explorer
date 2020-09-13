@@ -120,6 +120,7 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
     scrollToBottom() {
 
         console.log('[scrollToBottom] this.virtualSize=' + this.virtualSize );
+        // this should not be working wee need to include also notion of page
         this.$viewport.scrollTop = this.virtualSize;
 
     }
@@ -201,12 +202,12 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         console.log('[reload] rect.width=' + rect.width + ' rect.height=' + rect.width);
 
         // this.itemSize = parseFloat(rect.height) + (parseFloat(rect.marginTop) + parseFloat(rect.marginBottom));
-        this.itemSize = 50;
+        this.itemSize = 36;
         console.log('[reload] this.itemSize=' + this.itemSize);
 
         // !!! important
         // this.virtualSize = this.vsForOf.length * this.itemSize;
-        this.virtualSize = 2700000 * this.itemSize;
+        this.virtualSize = 1000000000 * this.itemSize;
 
         console.log('[reload] this.virtualSize=' + this.virtualSize);
 
@@ -251,8 +252,11 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
             }
         });
 
+
         // prepare item to render
-        this.vsForOf.slice(start, end).forEach((item, i) => {
+        // this.vsForOf.slice(start, end).forEach((item, i) => {
+        for (let i = 0; i < (end - start); i++) {
+            // console.log(i);
             if (!this.cache.get(i + start)) {
 
                 const view = this.viewContainer.createEmbeddedView(this.template);
@@ -270,7 +274,7 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
             } else {
                 // console.warn('[renderViewportItems][cache]');
             }
-        });
+        }
 
         // this.afterRender.emit({ items: this.vsForOf.slice(start, end) });
 
