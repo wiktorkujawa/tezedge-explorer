@@ -10,7 +10,7 @@ import { VirtualScrollDirective } from '../../shared/virtual-scroll.directive';
   selector: 'app-mempool-action',
   templateUrl: './mempool-action.component.html',
   styleUrls: ['./mempool-action.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit {
 
