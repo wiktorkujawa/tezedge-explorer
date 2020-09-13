@@ -799,6 +799,20 @@ cdk-virtual-scroll-viewport::-webkit-scrollbar-thumb {
     background-color: $color-border;
 }
 
+.virtual-scroll-container::-webkit-scrollbar-track {
+    background-color: $color-table-background;
+}
+
+.virtual-scroll-container::-webkit-scrollbar {
+    width: 12px;
+    background-color: $color-table-border; //#F5F5F5;
+}
+
+.virtual-scroll-container::-webkit-scrollbar-thumb {
+    height: 80px;
+    background-color: $color-border;
+}
+
 .network-action-table-detail::-webkit-scrollbar-track {
     background-color: $color-table-background;
 }
