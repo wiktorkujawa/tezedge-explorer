@@ -34,7 +34,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
 
   constructor(
     public store: Store<any>,
-    private ref: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef
   ) { }
 
 
@@ -78,7 +78,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
       .subscribe(data => {
 
         this.virtualScrollItems = data;
-        this.ref.markForCheck();
+        this.changeDetector.markForCheck();
 
         console.log('[networkAction] data', data);
         if (this.networkActionlastCursorId < data.lastCursorId) {

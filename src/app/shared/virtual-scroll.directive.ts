@@ -13,9 +13,13 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
     private itemHeight = 36;
     private maxScrollHeight = 0;
+    private scrollPositionStart = 0;
+    private scrollPositionEnd = 0;
 
     private virtualScrollHeight = 0;
+
     private virtualScrollItemsCount = 0;
+    private virtualScrollItemsOffset = 0;
 
     private viewportHeight = 0;
     private cache = new Map<number, ViewRef>();
@@ -36,7 +40,16 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        // console.log('[ngOnChanges]', changes);
+        console.log('[ngOnChanges]', changes);
+
+        if (this.virtualScrollItemsCount > 0) {
+
+            // render items
+            this.viewContainer.clear();
+            this.renderViewportItems();
+
+        }
+
     }
 
     ngDoCheck() {
@@ -80,13 +93,38 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
         window.requestAnimationFrame(() => {
 
-            console.log('[onScroll] this.$viewport.scrollTop=' + this.$viewport.scrollTop + ' this.viewportHeight=' + this.viewportHeight);
-            console.warn('[onScroll] itemsToEnd=', (this.maxScrollHeight - this.$viewport.scrollTop) / this.itemHeight);
+            console.warn('[onScroll] this.$viewport.scrollTop=' + this.$viewport.scrollTop + ' this.viewportHeight=' + this.viewportHeight);
 
-            this.viewContainer.clear();
+            // use currect scroll position to get start and end item index
+            let start = Math.floor((this.$viewport.scrollTop - this.viewportHeight) / this.itemHeight);
+            let end = Math.ceil((this.$viewport.scrollTop + (this.viewportHeight * 2)) / this.itemHeight);
+            start = Math.max(0, start);
+            end = Math.min(this.virtualScrollHeight / this.itemHeight, end);
+            console.warn('[onScroll] start=' + start + ' end=' + end
+                + ' this.scrollPositionStart=' + this.scrollPositionStart + ' this.scrollPositionEnd=' + this.scrollPositionEnd);
 
-            // render items
-            this.renderViewportItems();
+
+            // get offset so we can set correct possition for items
+            this.virtualScrollItemsOffset = (this.vsForOf.lastCursorId - this.virtualScrollItemsCount);
+            console.warn('[renderViewportItems] this.virtualScrollItemsCount=' + this.virtualScrollItemsCount
+                + ' this.vsForOf.lastCursorId=' + this.vsForOf.lastCursorId);
+
+
+            // check if we have new scroll event
+            if (this.scrollPositionStart !== start && this.scrollPositionEnd !== end) {
+
+                // save scroll position
+                this.scrollPositionStart = start;
+                this.scrollPositionEnd = end;
+
+                // emit event to load data for virtual scroll
+                this.getItems.emit({
+                    start: this.virtualScrollItemsOffset + this.scrollPositionStart,
+                    end: this.virtualScrollItemsOffset + this.scrollPositionEnd
+                });
+
+            }
+
 
         });
 
@@ -136,55 +174,25 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     private renderViewportItems() {
-        // console.log('[renderViewportItems] this.vsForOf=', this.vsForOf.entities);
-        console.warn('[renderViewportItems] this.$viewport.scrollTop=' + this.$viewport.scrollTop);
-
-        // use currect scroll posiotion to get start and end item index
-        let start = Math.floor((this.$viewport.scrollTop - this.viewportHeight) / this.itemHeight);
-        let end = Math.ceil((this.$viewport.scrollTop + (this.viewportHeight * 2)) / this.itemHeight);
-
-        start = Math.max(0, start);
-        end = Math.min(this.virtualScrollHeight / this.itemHeight, end);
-
-        const virtualScrollItemsOffset = (this.vsForOf.lastCursorId - this.virtualScrollItemsCount);
-
-        console.warn('[renderViewportItems] this.virtualScrollItemsCount=' + this.virtualScrollItemsCount
-            + ' this.vsForOf.lastCursorId=' + this.vsForOf.lastCursorId);
-
-        console.warn('[renderViewportItems] start=' + start + ' end=' + end);
-
-        this.cache.forEach((v, i) => {
-            if (i < start || i > end) {
-                v.destroy();
-                this.cache.delete(i);
-            }
-        });
+        // console.warn('[renderViewportItems] this.vsForOf=', this.vsForOf.ids);
 
         // prepare items to render
-        for (let index = 0; index < (end - start); index++) {
-            if (!this.cache.get(index + start)) {
+        for (let index = 0; index < (this.scrollPositionEnd - this.scrollPositionStart); index++) {
 
-                const view = this.viewContainer.createEmbeddedView(this.template);
+            const view = this.viewContainer.createEmbeddedView(this.template);
 
-                view.context.position = (index + start) * this.itemHeight;
+            view.context.position = (index + this.scrollPositionStart) * this.itemHeight;
+            view.context.$implicit = {
+                index: this.virtualScrollItemsOffset + index + this.scrollPositionStart,
+                ...this.vsForOf.entities[this.virtualScrollItemsOffset + index + this.scrollPositionStart]
+            };
+            view.context.start = this.scrollPositionStart;
+            view.context.end = this.scrollPositionEnd;
+            view.context.index = index + this.scrollPositionStart;
 
-                view.context.$implicit = {
-                    index: virtualScrollItemsOffset + index + start,
-                    ...this.vsForOf.entities[virtualScrollItemsOffset + index + start]
-                };
-
-                view.context.start = start;
-                view.context.end = end;
-                view.context.index = index + start;
-
-                // this.cache.set(i + start, view);
-
-                view.markForCheck();
-            }
+            view.markForCheck();
 
         }
-
-        this.getItems.emit({ start: virtualScrollItemsOffset + start, end: virtualScrollItemsOffset + end });
 
     }
 
