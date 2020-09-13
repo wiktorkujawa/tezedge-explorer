@@ -44,7 +44,20 @@ export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit 
     //   this.virtualScrollItems[i] = { id: i };
     // }
 
-    this.virtualScrollItems[0] = { id : 0 };
+    this.virtualScrollItems[0] = { index : 0 };
+
+  }
+
+  onScroll($event) {
+
+    console.warn('[onScroll]', $event );
+
+    // this.store.dispatch({
+    //   type: 'NETWORK_ACTION_LOAD',
+    //   payload: {
+    //     cursor_id: $event.end
+    //   },
+    // });
 
   }
 
@@ -82,6 +95,9 @@ export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit 
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(data => {
 
+        // this.virtualScrollItems = [data];
+        // console.log('[data]', data );
+        // this.virtualScrollItems =  data.ids.map( id => data.entities[id] );
 
         if (this.networkActionlastCursorId < data.lastCursorId) {
 

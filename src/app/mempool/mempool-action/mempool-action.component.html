@@ -2,7 +2,7 @@
     .virtualScrollHeader {
         display: flex;
         align-items: center;
-        color: #e1e1ff;
+        color: #ffffff99;
 
         height: 34px;
         font-size: 12px;
@@ -64,13 +64,35 @@
         <br/>
     -->
 
-    <button style="font-size:12px; color: #a4a4a5;" mat-button (click)="scrollToItem()">
+    <button style="font-size:12px; color: #ffffff99;" mat-button (click)="scrollToItem()">
         Scroll to last row
     </button>
+    <!--  <div class="virtualScrollHeader">
+        <span style="display: inline-block; min-width: 100px;">
+            ID
+        </span>
+        <span style="display: inline-block; min-width: 170px;">
+            ADDRESS
+        </span>
+        <span style="display: inline-block; min-width: 150px;">
+            TYPE
+        </span>
+    </div>  -->
     <div class="virtual-scroll-container">
-        <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="__position__">
-            <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.id % 2">
-                {{event.id}}
+        <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="__position__" (afterRender)="onScroll($event)">
+            <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2">
+                <span style="display: inline-block; min-width: 100px;">
+                    {{ event.index }}
+                </span>
+                <span style="display: inline-block; min-width: 100px;">
+                    {{ event.id }}
+                </span>
+                <span style="display: inline-block; min-width: 170px;">
+                    {{ event?.remote_addr }}
+                </span>
+                <span style="display: inline-block; min-width: 150px;">
+                    {{ event?.type }}
+                </span>
             </span>
         </ng-template>
     </div>
