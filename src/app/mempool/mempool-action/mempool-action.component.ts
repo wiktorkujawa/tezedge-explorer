@@ -38,7 +38,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
   ) { }
 
 
-  onScroll($event) {
+  getItems($event) {
 
     console.warn('[mempool-action][onScroll]', $event );
 

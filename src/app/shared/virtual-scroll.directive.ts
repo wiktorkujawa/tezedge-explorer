@@ -26,7 +26,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
     @Input() vsForOf: any;
 
-    @Output() afterRender = new EventEmitter<any>();
+    @Output() getItems = new EventEmitter<any>();
 
     constructor(
         private element: ElementRef,
@@ -82,6 +82,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
             console.log('[onScroll] this.$viewport.scrollTop=' + this.$viewport.scrollTop + ' this.viewportHeight=' + this.viewportHeight);
             console.warn('[onScroll] itemsToEnd=', (this.maxScrollHeight - this.$viewport.scrollTop) / this.itemHeight);
+
+            this.viewContainer.clear();
 
             // render items
             this.renderViewportItems();
@@ -144,9 +146,12 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         start = Math.max(0, start);
         end = Math.min(this.virtualScrollHeight / this.itemHeight, end);
 
+        const virtualScrollItemsOffset = (this.vsForOf.lastCursorId - this.virtualScrollItemsCount);
+
+        console.warn('[renderViewportItems] this.virtualScrollItemsCount=' + this.virtualScrollItemsCount
+            + ' this.vsForOf.lastCursorId=' + this.vsForOf.lastCursorId);
+
         console.warn('[renderViewportItems] start=' + start + ' end=' + end);
-        console.log('[renderViewportItems] this.virtualScrollHeight=' + this.virtualScrollHeight
-            + ' this.viewportHeight=' + this.viewportHeight);
 
         this.cache.forEach((v, i) => {
             if (i < start || i > end) {
@@ -160,10 +165,13 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             if (!this.cache.get(index + start)) {
 
                 const view = this.viewContainer.createEmbeddedView(this.template);
-                // set item postion in scroller
 
                 view.context.position = (index + start) * this.itemHeight;
-                view.context.$implicit = { index: index + start, ...this.vsForOf.entities[index + start] };
+
+                view.context.$implicit = {
+                    index: virtualScrollItemsOffset + index + start,
+                    ...this.vsForOf.entities[virtualScrollItemsOffset + index + start]
+                };
 
                 view.context.start = start;
                 view.context.end = end;
@@ -176,7 +184,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
         }
 
-        this.afterRender.emit({ start, end });
+        this.getItems.emit({ start: virtualScrollItemsOffset + start, end: virtualScrollItemsOffset + end });
 
     }
 
