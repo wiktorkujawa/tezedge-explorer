@@ -3,13 +3,13 @@ import {
     IterableDiffer, Input, Output, EventEmitter, ElementRef, ViewContainerRef,
     Renderer2, TemplateRef, IterableDiffers, SimpleChanges, IterableChanges, OnDestroy
 } from '@angular/core';
-import { NgForOfContext } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 // tslint:disable-next-line: no-conflicting-lifecycle
 @Directive({
     selector: '[vsFor][vsForOf]'
 })
-export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges, OnDestroy {
+export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChanges, DoCheck {
     private itemSize = 36;
     private realScrollSize = 0;
     private currPage = 0;
@@ -27,7 +27,7 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
     private differ: IterableDiffer<any[]> | null = null;
     private trackByFn: TrackByFunction<any[]>;
 
-    @Input() vsForOf: any[];
+    @Input() vsForOf: any;
 
     @Input()
     set vsForTrackBy(fn: TrackByFunction<any[]>) {
@@ -44,12 +44,20 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         private viewContainer: ViewContainerRef,
         private renderer: Renderer2,
         private template: TemplateRef<any>,
-        private differs: IterableDiffers) {
+        private ref: ChangeDetectorRef) {
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        // console.log('[ngOnChanges]', changes);
+    }
+
+    ngDoCheck() {
+        // this.ref.markForCheck();
+        // console.log('[ngDoCheck]', this.vsForOf);
+    }
 
     ngAfterViewInit() {
-        console.log('[ngAfterViewInit]');
+        // console.log('[ngAfterViewInit]');
 
         this.realScrollSize = this.getMaxBrowserScrollSize();
 
@@ -64,25 +72,8 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         this.viewportSize = this.$viewport.getBoundingClientRect().height;
         this.scrollListener = this.renderer.listen(this.$viewport, 'scroll', this.onScroll.bind(this));
 
-        console.log('[ngAfterViewInit] this.realScrollSize=' + this.realScrollSize + ' this.viewportSize=' + this.viewportSize);
+       // console.log('[ngAfterViewInit] this.realScrollSize=' + this.realScrollSize + ' this.viewportSize=' + this.viewportSize);
 
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        console.log('[ngOnChanges]', changes);
-
-        if ('vsForOf' in changes) {
-            // React on vsForOf changes only once all inputs have been initialized
-            const value = changes.vsForOf.currentValue;
-            if (!this.differ && value) {
-                try {
-                    this.differ = this.differs.find(value).create(this.vsForTrackBy);
-                } catch (e) {
-                    throw new Error(
-                        `Cannot find a differ supporting object '${value}' of type '${JSON.stringify(value)}'. NgFor only supports binding to Iterables such as Arrays.`);
-                }
-            }
-        }
     }
 
     // TODO: fix bug with scrolling item to 0
@@ -104,28 +95,14 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         // this should not be working wee need to include also notion of page
 
         this.load();
-        
-        console.log()
 
-        this.$viewport.scrollTop = this.virtualSize;
+        console.warn('[scrollToBottom] vsForOf.lastCursorId=' , this.vsForOf);
+
+        this.$viewport.scrollTop = this.vsForOf.lastCursorId * this.itemSize;
         // this.$viewport.scrollTop = 0;
 
     }
 
-    ngDoCheck(): void {
-        console.log('[ngDoCheck]', this.vsForOf);
-
-        // if (this.vsForOf && this.vsForOf.ids && this.vsForOf.ids.length > 0 ) {
-        //     this.load();
-        // }
-
-        if (this.differ) {
-            const changes = this.differ.diff(this.vsForOf);
-            if (changes) {
-                this.load();
-            }
-        }
-    }
 
     onScroll() {
 
@@ -136,12 +113,17 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
             console.log('[onScroll] this.$viewport.scrollTop=' + this.$viewport.scrollTop + ' this.prevScrollPos=' + this.prevScrollPos +
                 ' jump=' + Math.abs(scrollPos - this.prevScrollPos) + ' this.viewportSize=' + this.viewportSize);
 
+            console.warn('[onScroll] itemsToEnd=', (this.realScrollSize - this.$viewport.scrollTop) / this.itemSize);
+
             // check if we are moving outside of viewport
             if (Math.abs(scrollPos - this.prevScrollPos) > this.viewportSize) {
                 this.onScrollOutsideViewport();
             } else {
                 this.onScrollInViewport();
             }
+
+            // this.clear();
+            // this.load();
 
             // render items
             this.renderViewportItems();
@@ -154,51 +136,52 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
 
         const scrollPos = this.$viewport.scrollTop;
 
-        console.log('+[onScrollInViewport] (this.currPage + 1) * this.pageHeight=', (this.currPage + 1) * this.pageHeight);
-        console.log('+[onScrollInViewport] (scrollPos + this.currPageOffset)=', (scrollPos + this.currPageOffset));
-        console.log('+[onScrollInViewport] (this.currPage * this.pageHeight)=', this.currPage * this.pageHeight);
+        // console.log('+[onScrollInViewport] (this.currPage + 1) * this.pageHeight=', (this.currPage + 1) * this.pageHeight);
+        // console.log('+[onScrollInViewport] (scrollPos + this.currPageOffset)=', (scrollPos + this.currPageOffset));
+        // console.log('+[onScrollInViewport] (this.currPage * this.pageHeight)=', this.currPage * this.pageHeight);
 
-        if ((scrollPos + this.currPageOffset) > ((this.currPage + 1) * this.pageHeight)) {
+        // if ((scrollPos + this.currPageOffset) > ((this.currPage + 1) * this.pageHeight)) {
 
-            this.currPage++;
-            this.currPageOffset = Math.round(this.currPage * this.jumpCoefficient);
-            this.$viewport.scrollTop = this.prevScrollPos = (scrollPos - this.jumpCoefficient);
-            this.clear();
+        //     this.currPage++;
+        //     this.currPageOffset = Math.round(this.currPage * this.jumpCoefficient);
+        //     this.$viewport.scrollTop = this.prevScrollPos = (scrollPos - this.jumpCoefficient);
+        //     this.clear();
 
-            console.warn('+[onScrollInViewport] higher');
+        //     console.warn('+[onScrollInViewport] higher');
 
-        } else if ((scrollPos + this.currPageOffset) < (this.currPage * this.pageHeight)) {
+        // } else if ((scrollPos + this.currPageOffset) < (this.currPage * this.pageHeight)) {
 
-            this.currPage--;
-            this.currPageOffset = Math.round(this.currPage * this.jumpCoefficient);
-            this.$viewport.scrollTop = this.prevScrollPos = (scrollPos + this.jumpCoefficient);
-            this.clear();
+        //     this.currPage--;
+        //     this.currPageOffset = Math.round(this.currPage * this.jumpCoefficient);
+        //     this.$viewport.scrollTop = this.prevScrollPos = (scrollPos + this.jumpCoefficient);
+        //     this.clear();
 
-            console.warn('+[onScrollInViewport] lower');
+        //     console.warn('+[onScrollInViewport] lower');
 
-        } else {
+        // } else {
 
-            console.warn('+[onScrollInViewport] else');
-            this.prevScrollPos = scrollPos;
+        // console.warn('+[onScrollInViewport] else');
+        this.prevScrollPos = scrollPos;
+        this.clear();
 
-        }
+        // }
 
-        console.log('+[onScrollInViewport] this.$viewport.scrollTop=' + this.$viewport.scrollTop +
-            ' this.virtualSize=' + this.virtualSize + ' this.viewportSize=' + this.viewportSize +
-            ' this.realScrollSize=' + this.realScrollSize + ' this.pageHeight=' + this.pageHeight +
-            ' this.jumpCoefficient=' + this.jumpCoefficient);
-        console.log('+[onScrollInViewport] this.currPage=' + this.currPage + ' this.currPageOffset=' + this.currPageOffset);
+        // console.log('+[onScrollInViewport] this.$viewport.scrollTop=' + this.$viewport.scrollTop +
+        //     ' this.virtualSize=' + this.virtualSize + ' this.viewportSize=' + this.viewportSize +
+        //     ' this.realScrollSize=' + this.realScrollSize + ' this.pageHeight=' + this.pageHeight +
+        //     ' this.jumpCoefficient=' + this.jumpCoefficient);
+        // console.log('+[onScrollInViewport] this.currPage=' + this.currPage + ' this.currPageOffset=' + this.currPageOffset);
 
     }
 
     private onScrollOutsideViewport() {
 
         const scrollPos = this.$viewport.scrollTop;
-        this.currPage = Math.floor(
-             scrollPos * ((this.virtualSize - this.viewportSize) / (this.realScrollSize - this.viewportSize)) * (1 / this.pageHeight)
-        );
-        this.currPageOffset = Math.round(this.currPage * this.jumpCoefficient);
-        this.prevScrollPos = scrollPos;
+        // this.currPage = Math.floor(
+        //      scrollPos * ((this.virtualSize - this.viewportSize) / (this.realScrollSize - this.viewportSize)) * (1 / this.pageHeight)
+        // );
+        // this.currPageOffset = Math.round(this.currPage * this.jumpCoefficient);
+        // this.prevScrollPos = scrollPos;
         this.clear();
 
         console.log('-[onScrollOutsideViewport] this.virtualSize=' + this.virtualSize + ' this.viewportSize=' + this.viewportSize + ' this.realScrollSize=' + this.realScrollSize + ' this.pageHeight=' + this.pageHeight + ' this.jumpCoefficient=' + this.jumpCoefficient);
@@ -207,10 +190,11 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
 
 
     private clear() {
-        console.log('[clear]');
+        // console.log('[clear]');
         this.cache.clear();
         this.viewContainer.clear();
     }
+
 
     private load() {
         console.log('[load]');
@@ -235,7 +219,8 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
 
         // !!! important
         // this.virtualSize = this.vsForOf.length * this.itemSize;
-        this.virtualSize = 10000000 * this.itemSize;
+        console.warn('[load] vsForOf.lastCursorId=' , this.vsForOf);
+        this.virtualSize = this.vsForOf.lastCursorId * this.itemSize;
 
         console.log('[load] this.virtualSize=' + this.virtualSize + ' this.realScrollSize=' + this.realScrollSize);
 
@@ -263,10 +248,11 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         this.$scroller.style.height = `${this.realScrollSize}px`;
         view.destroy();
         this.$viewport.dispatchEvent(new Event('scroll'));
+
     }
 
     private renderViewportItems() {
-        // console.log('[renderViewportItems] this.vsForOf=', this.vsForOf);
+        // console.log('[renderViewportItems] this.vsForOf=', this.vsForOf.entities);
         console.warn('[renderViewportItems] this.$viewport.scrollTop=' + this.$viewport.scrollTop);
         console.warn('[renderViewportItems] this.currPage=' + this.currPage + ' this.currPageOffset=' + this.currPageOffset);
 
@@ -298,14 +284,14 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
 
                 const view = this.viewContainer.createEmbeddedView(this.template);
                 view.context.__position__ = (i + start) * this.itemSize - this.currPageOffset;
-                view.context.$implicit = { index: i + start };
-                // view.context.$implicit = { index: i + start, ...this.vsForOf[i] };
+                // view.context.$implicit = { index: i + start };
+                view.context.$implicit = { index: i + start, ...this.vsForOf.entities[i + start] };
 
                 view.context.start = start;
                 view.context.end = end;
 
                 view.context.index = i + start;
-                this.cache.set(i + start, view);
+                // this.cache.set(i + start, view);
                 view.markForCheck();
 
                 // console.log('[renderViewportItems][hit]');
@@ -327,18 +313,17 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
             const div = document.createElement('div');
             const style = div.style;
             style.position = 'absolute';
-            style.left = '99999999999999px';
             style.top = '9999999999999999px';
             document.body.appendChild(div);
             const size = div.getBoundingClientRect().top;
             document.body.removeChild(div);
 
-            console.log('[getMaxBrowserScrollSize] max number of items: ', Math.floor(size / this.itemSize));
+            console.log('[getMaxBrowserScrollSize] max number of items: ', Math.abs(Math.floor(size / this.itemSize)));
 
             // !!! must be multiple of this.itemSize
             // return 360000000;
 
-            return Math.floor(size / 10);
+            return Math.abs(Math.floor(size / 10));
 
         } else {
 

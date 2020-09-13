@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { takeUntil, map, debounceTime, filter } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { VirtualScrollDirective } from '../../shared/virtual-scroll.directive';
   styleUrls: ['./mempool-action.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MempoolActionComponent implements OnInit, OnDestroy {
 
   public mempoolAction;
   public mempoolActionList = [];
@@ -34,30 +34,20 @@ export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     public store: Store<any>,
+    private ref: ChangeDetectorRef
   ) { }
 
-
-  ngAfterViewInit() {
-
-    // TODO: temp remove
-    // for (let i = 0; i < 2700000; i++) {  // 2700000 //300000
-    //   this.virtualScrollItems[i] = { id: i };
-    // }
-
-    this.virtualScrollItems[0] = { index : 0 };
-
-  }
 
   onScroll($event) {
 
     console.warn('[onScroll]', $event );
 
-    // this.store.dispatch({
-    //   type: 'NETWORK_ACTION_LOAD',
-    //   payload: {
-    //     cursor_id: $event.end
-    //   },
-    // });
+    this.store.dispatch({
+      type: 'NETWORK_ACTION_LOAD',
+      payload: {
+        cursor_id: $event.end
+      },
+    });
 
   }
 
@@ -82,26 +72,18 @@ export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit 
         this.mempoolAction = data;
       });
 
-    // TODO: temporary remove
-
-    // network action start
-    this.store.dispatch({
-      type: 'NETWORK_ACTION_LOAD',
-      payload: {},
-    });
-
     // wait for data changes from redux
     this.store.select('networkAction')
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(data => {
 
-        // this.virtualScrollItems = [data];
-        // console.log('[data]', data );
-        // this.virtualScrollItems =  data.ids.map( id => data.entities[id] );
+        this.virtualScrollItems = data;
+        this.ref.markForCheck();
 
+        console.log('[networkAction] data', data);
         if (this.networkActionlastCursorId < data.lastCursorId) {
 
-          console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
+          // console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
           this.networkActionlastCursorId = data.lastCursorId;
 
           // setTimeout(() => {
@@ -111,6 +93,12 @@ export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit 
         }
 
       });
+
+    // network action start
+    this.store.dispatch({
+      type: 'NETWORK_ACTION_LOAD',
+      payload: {},
+    });
 
     // create custom network data source
     this.networkAction$ = this.store.select('networkAction');

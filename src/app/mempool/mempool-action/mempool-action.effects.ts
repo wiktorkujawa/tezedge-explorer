@@ -12,7 +12,7 @@ export class MempoolActionEffects {
 
     @Effect()
     MempoolActionLoad$ = this.actions$.pipe(
-        ofType('MEMPOOL_ACTION_LOAD'),
+        ofType('MEMPOOL_ACTION_LOAD_'),
 
         // merge state
         withLatestFrom(this.store, (action: any, state) => ({ action, state })),
