@@ -91,6 +91,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
     onScroll() {
 
+        // update virtual scroll before next repaint
         window.requestAnimationFrame(() => {
 
             console.warn('[onScroll] this.$viewport.scrollTop=' + this.$viewport.scrollTop + ' this.viewportHeight=' + this.viewportHeight);
@@ -131,45 +132,34 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     private clear() {
-        // console.log('[clear]');
+        console.log('[clear]');
+
         this.cache.clear();
         this.viewContainer.clear();
     }
-
 
     private load() {
         console.log('[load]');
 
         this.clear();
 
-        const view = this.viewContainer.createEmbeddedView(this.template);
-        view.context.position = 0;
-        view.context.$implicit = { index: 0 };
-        view.context.start = 0;
-        view.context.end = 0;
-        view.context.index = 0;
-        view.detectChanges();
-
         // set row height in virtual scroll
         console.log('[load] this.itemHeight=' + this.itemHeight);
         this.itemHeight = 36;
 
         // get number of items in virtual scroll
-        console.warn('[load] vsForOf.lastCursorId=', this.vsForOf);
+        console.warn('[load] vsForOf.lastCursorId=', this.vsForOf.lastCursorId);
         this.virtualScrollItemsCount = (this.vsForOf.lastCursorId * this.itemHeight) > this.maxScrollHeight
             ? Math.floor(this.maxScrollHeight / this.itemHeight) : this.vsForOf.lastCursorId;
 
         // set virtual scroll height in pixels
         this.virtualScrollHeight = this.virtualScrollItemsCount * this.itemHeight;
+        this.maxScrollHeight = this.maxScrollHeight > this.virtualScrollHeight ? this.virtualScrollHeight : this.maxScrollHeight;
+        this.$scroller.style.height = `${this.maxScrollHeight}px`;
 
         console.log('[load] this.virtualScrollHeight=' + this.virtualScrollHeight + ' this.maxScrollHeight=' + this.maxScrollHeight);
-        this.maxScrollHeight = this.maxScrollHeight > this.virtualScrollHeight ? this.virtualScrollHeight : this.maxScrollHeight;
 
-
-        this.$scroller.style.height = `${this.maxScrollHeight}px`;
-        view.destroy();
-
-        this.$viewport.dispatchEvent(new Event('scroll'));
+        // this.$viewport.dispatchEvent(new Event('scroll'));
 
     }
 
@@ -180,7 +170,6 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         for (let index = 0; index < (this.scrollPositionEnd - this.scrollPositionStart); index++) {
 
             const view = this.viewContainer.createEmbeddedView(this.template);
-
             view.context.position = (index + this.scrollPositionStart) * this.itemHeight;
             view.context.$implicit = {
                 index: this.virtualScrollItemsOffset + index + this.scrollPositionStart,
@@ -189,14 +178,13 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             view.context.start = this.scrollPositionStart;
             view.context.end = this.scrollPositionEnd;
             view.context.index = index + this.scrollPositionStart;
-
             view.markForCheck();
 
         }
 
     }
 
-    // get useable scroll size, so we can stack multiple pages for very large lists
+    // get useable scroll size, so we can stack multiple pages for very large list
     // https://stackoverflow.com/questions/34931732/height-limitations-for-browser-vertical-scroll-bar
     private getMaxBrowserScrollSize(): number {
 
@@ -209,13 +197,10 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             document.body.appendChild(div);
             const size = div.getBoundingClientRect().top;
             document.body.removeChild(div);
-
             console.log('[getMaxBrowserScrollSize] max number of items: ', Math.abs(Math.floor(size / this.itemHeight)));
-
             return Math.abs(Math.floor(size / 10));
 
         } else {
-
             return this.maxScrollHeight;
         }
 
