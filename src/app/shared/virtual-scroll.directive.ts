@@ -50,7 +50,7 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
     onScroll() {
 
         window.requestAnimationFrame(() => {
-            console.log('[onScroll]' , this.$viewport.scrollTop);
+            console.log('[onScroll] this.$viewport.scrollTop=' + this.$viewport.scrollTop);
 
             const scrollPos = this.$viewport.scrollTop;
 
@@ -75,7 +75,6 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         this.$viewport = this.element.nativeElement.parentElement;
         this.$viewport.style.position = 'relative';
         this.$scroller.style.position = 'absolute';
-        this.$scroller.style.left = '0px';
         this.$scroller.style.top = '0px';
         this.$scroller.style.width = '1px';
 
@@ -84,9 +83,8 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         this.viewportSize = this.$viewport.getBoundingClientRect().height;
         this.scrollListener = this.renderer.listen(this.$viewport, 'scroll', this.onScroll.bind(this));
 
-        // trigger change detection
-        const view = this.viewContainer.createEmbeddedView(this.template);
-        view.markForCheck();
+        console.log('[ngAfterViewInit] this.realScrollSize =' + this.realScrollSize  + ' this.viewportSize=' + this.viewportSize  );
+
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -108,19 +106,21 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
 
     // TODO: fix bug with scrolling item to 0
     scrollToItem(index: number) {
-        console.log('[scrollTo]', index, this);
+        console.log('[scrollTo] index=' + index + ' this.jumpCoefficient=' + this.jumpCoefficient);
 
         const virtualPos = index * this.itemSize;
         const currPage = /*this.currPage*/ Math.floor(virtualPos / this.pageHeight);
         const currPageOffset = /*this.currPageOffset*/ Math.round(currPage * this.jumpCoefficient);
 
-        this.$viewport.scrollTop = this.prevScrollPos = (virtualPos - this.currPageOffset);
+        this.prevScrollPos = (virtualPos - currPageOffset);
+
+        this.$viewport.scrollTop = this.prevScrollPos;
     }
 
     scrollToBottom() {
 
-        console.log('[scrollToBottom]');
-        this.$viewport.scrollTop = this.virtualSize ;
+        console.log('[scrollToBottom] this.virtualSize=' + this.virtualSize );
+        this.$viewport.scrollTop = this.virtualSize;
 
     }
 
@@ -136,7 +136,6 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
     }
 
     private onScrollInViewport() {
-        console.log('+[onScrollInViewport]', this.$viewport.scrollTop);
 
         const scrollPos = this.$viewport.scrollTop;
 
@@ -159,10 +158,12 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
             this.prevScrollPos = scrollPos;
 
         }
+
+        console.log('+[onScrollInViewport] this.currPage=' + this.currPage + ' this.currPageOffset=' + this.prevScrollPos );
+
     }
 
     private onScrollOutsideViewport() {
-        console.log('-[onScrollOutsideViewport]');
 
         const scrollPos = this.$viewport.scrollTop;
         this.currPage = Math.floor(
@@ -171,6 +172,8 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         this.currPageOffset = Math.round(this.currPage * this.jumpCoefficient);
         this.prevScrollPos = scrollPos;
         this.clear();
+
+        console.log('-[onScrollOutsideViewport] this.currPage=' + this.currPage + ' this.currPageOffset=' + this.prevScrollPos );
     }
 
 
@@ -197,15 +200,17 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         console.log('[reload] this.itemSize=' + this.itemSize);
         console.log('[reload] rect.width=' + rect.width + ' rect.height=' + rect.width);
 
-        this.itemSize = parseFloat(rect.height) + (parseFloat(rect.marginTop) + parseFloat(rect.marginBottom));
-
+        // this.itemSize = parseFloat(rect.height) + (parseFloat(rect.marginTop) + parseFloat(rect.marginBottom));
+        this.itemSize = 50;
         console.log('[reload] this.itemSize=' + this.itemSize);
 
         // !!! important
-        this.virtualSize = this.vsForOf.length * this.itemSize;
+        // this.virtualSize = this.vsForOf.length * this.itemSize;
+        this.virtualSize = 2700000 * this.itemSize;
+
         console.log('[reload] this.virtualSize=' + this.virtualSize);
 
-        // !!! if numPages is over the is bug
+        // !!! if numPages is over 100 we get empty space at end of scrolling area
         this.pageHeight = this.realScrollSize / 100;
         this.numPages = Math.ceil(this.virtualSize / this.pageHeight);
         console.log('[reload] this.numPages=' + this.numPages);
@@ -235,9 +240,9 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
         start = Math.max(0, start);
         end = Math.min(this.virtualSize / this.itemSize, end);
 
-        // console.log('[renderViewportItems] y=' + y + ' start=' + start + ' end=' + end + ' this.cahe=', this.cache);
-        // console.log('[renderViewportItems] this.itemSize=' + this.itemSize + ' this.virtualSize=' + this.virtualSize
-        //     + ' this.viewportSize=' + this.viewportSize);
+        console.log('[renderViewportItems] y=' + y + ' start=' + start + ' end=' + end );
+        console.log('[renderViewportItems] this.itemSize=' + this.itemSize + ' this.virtualSize=' + this.virtualSize
+            + ' this.viewportSize=' + this.viewportSize);
 
         this.cache.forEach((v, i) => {
             if (i < start || i > end) {
@@ -252,7 +257,7 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
 
                 const view = this.viewContainer.createEmbeddedView(this.template);
                 view.context.__position__ = (i + start) * this.itemSize - this.currPageOffset;
-                view.context.$implicit = { id: item.id };
+                view.context.$implicit = { id: i + start };
 
                 view.context.start = start;
                 view.context.end = end;
@@ -274,7 +279,8 @@ export class VirtualScrollDirective implements AfterViewInit, DoCheck, OnChanges
     // get useable scroll size, so we can stack multiple pages for very large lists
     // https://stackoverflow.com/questions/34931732/height-limitations-for-browser-vertical-scroll-bar
     private getMaxBrowserScrollSize(): number {
-        return 10000000;
+        // !!! must be multiple of this.itemSize
+        return 3600000;
         if (!this.realScrollSize) {
 
             const div = document.createElement('div');

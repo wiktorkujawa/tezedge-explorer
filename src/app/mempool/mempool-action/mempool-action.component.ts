@@ -40,7 +40,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit 
   ngAfterViewInit() {
 
     // TODO: temp remove
-    for (let i = 0; i < 270000; i++) {
+    for (let i = 0; i < 2700000; i++) {  // 2700000 //300000
       this.virtualScrollItems[i] = { id: i };
     }
 
@@ -48,7 +48,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy, AfterViewInit 
 
   scrollToItem() {
 
-    this.vrFor.scrollToItem(this.virtualScrollItems.length);
+    this.vrFor.scrollToBottom();
 
   }
 
