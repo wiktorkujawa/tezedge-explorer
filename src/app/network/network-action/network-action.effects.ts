@@ -17,7 +17,7 @@ export class NetworkActionEffects {
         // merge state
         withLatestFrom(this.store, (action: any, state) => ({ action, state })),
 
-        flatMap(({ action, state }) => {
+        switchMap(({ action, state }) => {
             return this.http.get(
                 state.settingsNode.api.debugger +
                 '/v2/p2p/?' +

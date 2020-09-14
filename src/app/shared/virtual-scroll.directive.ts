@@ -196,8 +196,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                     ...this.cacheItemsEntities,
                     [virutalScroollPosition]: this.vsForOf.entities[virutalScroollPosition],
                 };
-                // this.cacheItemsIds.add(virutalScroollPosition);
-                console.log('[cache] miss', virutalScroollPosition);
+                this.cacheItemsIds.add(virutalScroollPosition);
+                // console.log('[cache] miss', virutalScroollPosition);
             }
 
             const view = this.viewContainer.createEmbeddedView(this.template);
