@@ -124,18 +124,18 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             // cache request postion
             const requestPositionOffset =
                 Math.round((this.virtualScrollItemsOffset + (this.scrollPositionStart)) / 20) * 20;
-            if (this.cacheRequestIds[requestPositionOffset] !== 'pending') {
-                this.cacheRequestIds[requestPositionOffset] = 'pending';
+            // if (this.cacheRequestIds[requestPositionOffset] !== 'pending') {
+            //     this.cacheRequestIds[requestPositionOffset] = 'pending';
 
-                console.warn('[onScroll] cacheRequestIds=', requestPositionOffset);
+            console.warn('[onScroll] cacheRequestIds=', requestPositionOffset);
 
-                // emit event to load data for virtual scroll
-                this.getItems.emit({
-                    start: this.virtualScrollItemsOffset + this.scrollPositionStart,
-                    end: this.virtualScrollItemsOffset + this.scrollPositionEnd
-                });
+            // emit event to load data for virtual scroll
+            this.getItems.emit({
+                start: this.virtualScrollItemsOffset + this.scrollPositionStart,
+                end: this.virtualScrollItemsOffset + this.scrollPositionEnd
+            });
 
-            }
+            // }
             // }
 
             this.viewContainer.clear();
@@ -196,8 +196,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                     ...this.cacheItemsEntities,
                     [virutalScroollPosition]: this.vsForOf.entities[virutalScroollPosition],
                 };
-                this.cacheItemsIds.add(virutalScroollPosition);
-                // console.log('[cache] miss', virutalScroollPosition);
+                // this.cacheItemsIds.add(virutalScroollPosition);
+                console.log('[cache] miss', virutalScroollPosition);
             }
 
             const view = this.viewContainer.createEmbeddedView(this.template);
