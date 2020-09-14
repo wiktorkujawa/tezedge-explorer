@@ -38,27 +38,6 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
     private changeDetector: ChangeDetectorRef
   ) { }
 
-
-  getItems($event) {
-
-    console.warn('[mempool-action][onScroll]', $event );
-
-    this.store.dispatch({
-      type: 'NETWORK_ACTION_LOAD',
-      payload: {
-        cursor_id: $event.end
-      },
-    });
-
-  }
-
-  scrollToItem() {
-
-    this.vrFor.scrollToBottom();
-
-  }
-
-
   ngOnInit(): void {
 
     // triger action and get mempool data
@@ -87,12 +66,15 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
           // console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
           this.networkActionlastCursorId = data.lastCursorId;
 
+          setTimeout(() => {
+            this.vrFor.scrollToBottom();
+          });
+
           // setTimeout(() => {
           //   this.viewPort.scrollTo({ bottom: 0 });
           // });
 
         }
-
       });
 
     // network action start
@@ -107,13 +89,29 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
 
   }
 
+  getItems($event) {
+
+    console.warn('[mempool-action][onScroll]', $event);
+    this.store.dispatch({
+      type: 'NETWORK_ACTION_LOAD',
+      payload: {
+        cursor_id: $event.end
+      },
+    });
+
+  }
+
+  scrollToItem() {
+    this.vrFor.scrollToBottom();
+  }
+
   scrollToBottom() {
     console.log('[scrollToBottom]');
     this.viewPort.scrollTo({ bottom: 0 });
   }
 
   tableMouseEnter(item) {
-    console.log('[tableMouseEnter]', item );
+    // console.log('[tableMouseEnter]', item);
     this.networkActionItem = item;
   }
 
