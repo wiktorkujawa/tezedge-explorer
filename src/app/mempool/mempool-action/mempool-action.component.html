@@ -29,8 +29,8 @@
 <style>
     .virtual-scroll-container {
         position: relative;
-        width: 100%;
-        height: calc(100vh - 74px); 
+        width: 60%;
+        height: calc(100vh - 74px);
         /* must be multiple of itemSize*/
         /* height: 500px; */
         overflow: auto;
@@ -44,7 +44,7 @@
         display: flex;
         align-items: center;
 
-        height: 36px; 
+        height: 36px;
         font-size: 14px;
         padding-left: 16px;
 
@@ -65,33 +65,55 @@
     -->
 
     <button style="font-size:12px; color: #ffffff99;" mat-button (click)="scrollToItem()">
-        Scroll to last row
+        &nbsp;
     </button>
-    <!--  <div class="virtualScrollHeader">
-        <span style="display: inline-block; min-width: 100px;">
-            ID
+    <div class="virtualScrollHeader">
+        <span style="display: inline-block; min-width: 180px;">
+            DATETIME
         </span>
-        <span style="display: inline-block; min-width: 170px;">
+        <span style="display: inline-block; min-width: 180px;">
             ADDRESS
         </span>
-        <span style="display: inline-block; min-width: 150px;">
+        <span style="display: inline-block; min-width: 100px;">
+            SOURCE
+        </span>
+        <span style="display: inline-block; min-width: 180px;">
             TYPE
         </span>
-    </div>  -->
+    </div>
     <div class="virtual-scroll-container">
-        <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="position" (getItems)="getItems($event)">
+        <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="position"
+            (getItems)="getItems($event)">
             <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2">
-                <span style="display: inline-block; min-width: 100px;">
+                <!-- <span style="display: inline-block; min-width: 100px;">
                     {{ event.index }}
                 </span>
                 <span style="display: inline-block; min-width: 100px;">
                     {{ event.id }}
-                </span>
-                <span style="display: inline-block; min-width: 170px;">
+                </span> -->
+                <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
                     {{ event?.datetime }}
                 </span>
-                <span style="display: inline-block; min-width: 150px;">
-                    {{ event?.timestamp }}
+                <span style="display: inline-block; min-width: 180px;">
+                    <a style="color: #ffffffcc; text-decoration:none;" href="#/network/{{ event?.remote_addr }}">
+                        {{ event?.remote_addr }}</a>
+                </span>
+                <span style="display: inline-block; min-width: 100px; color: #ffffffcc">
+                    <span *ngIf="event?.source_type==='local'">
+                        <svg-icon icon="local"></svg-icon>
+                        <svg-icon *ngIf="!event?.incoming" icon="arrow-right"></svg-icon>
+                        <svg-icon *ngIf="event?.incoming" icon="arrow-left"></svg-icon>
+                        <svg-icon icon="remote"></svg-icon>
+                    </span>
+                    <span *ngIf="event?.source_type==='remote'">
+                        <svg-icon icon="remote"></svg-icon>
+                        <svg-icon *ngIf="event?.incoming" icon="arrow-right"></svg-icon>
+                        <svg-icon *ngIf="!event?.incoming" icon="arrow-left"></svg-icon>
+                        <svg-icon icon="local"></svg-icon>
+                    </span>
+                </span>
+                <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
+                    {{ event?.category }}<span *ngIf="event?.kind"> | {{ event?.kind }}</span>
                 </span>
             </span>
         </ng-template>
