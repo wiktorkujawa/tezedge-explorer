@@ -191,21 +191,21 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             const virutalScroollPosition = this.virtualScrollItemsOffset + index + this.scrollPositionStart;
 
             // cache value
-            if (this.vsForOf.entities[virutalScroollPosition] && !this.cacheItemsIds.has(virutalScroollPosition)) {
-                this.cacheItemsEntities = {
-                    ...this.cacheItemsEntities,
-                    [virutalScroollPosition]: this.vsForOf.entities[virutalScroollPosition],
-                };
-                this.cacheItemsIds.add(virutalScroollPosition);
-                // console.log('[cache] miss', virutalScroollPosition);
-            }
+            // if (this.vsForOf.entities[virutalScroollPosition] && !this.cacheItemsIds.has(virutalScroollPosition)) {
+            //     this.cacheItemsEntities = {
+            //         ...this.cacheItemsEntities,
+            //         [virutalScroollPosition]: this.vsForOf.entities[virutalScroollPosition],
+            //     };
+            //     this.cacheItemsIds.add(virutalScroollPosition);
+            //     // console.log('[cache] miss', virutalScroollPosition);
+            // }
 
             const view = this.viewContainer.createEmbeddedView(this.template);
             view.context.position = (index + this.scrollPositionStart) * this.itemHeight;
             view.context.$implicit = {
                 index: virutalScroollPosition,
-                // ...this.vsForOf.entities[virutalScroollPosition]
-                ...this.cacheItemsEntities[virutalScroollPosition],
+                ...this.vsForOf.entities[virutalScroollPosition]
+                // ...this.cacheItemsEntities[virutalScroollPosition],
             };
             view.context.start = this.scrollPositionStart;
             view.context.end = this.scrollPositionEnd;
