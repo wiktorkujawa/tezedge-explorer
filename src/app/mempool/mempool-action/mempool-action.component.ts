@@ -19,6 +19,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
 
   public networkAction;
   public networkActionList = [];
+  public networkActionItem;
 
   public onDestroy$ = new Subject();
 
@@ -111,6 +112,10 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
     this.viewPort.scrollTo({ bottom: 0 });
   }
 
+  tableMouseEnter(item) {
+    console.log('[tableMouseEnter]', item );
+    this.networkActionItem = item;
+  }
 
   ngOnDestroy() {
 

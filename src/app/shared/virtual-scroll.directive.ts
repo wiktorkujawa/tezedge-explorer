@@ -56,7 +56,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     ngDoCheck() {
-        console.log('[ngDoCheck]', this.vsForOf);
+        // console.log('[ngDoCheck]', this.vsForOf);
     }
 
     ngAfterViewInit() {
