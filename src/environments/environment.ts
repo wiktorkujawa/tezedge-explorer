@@ -26,13 +26,13 @@ export const environment = {
       debugger: 'https://carthage.tezedge.com:8753',
       ws: 'wss://carthage.tezedge.com',
     },
-    // {
-    //   id: 'ocaml-carthage-tezedge',
-    //   name: 'ocaml.carthage.tezedge.com',
-    //   http: 'https://carthage.tezedge.com:8742',
-    //   debugger: 'https://carthage.tezedge.com:8743',
-    //   ws: false,
-    // },
+    {
+      id: 'ocaml-carthage-tezedge',
+      name: 'ocaml.carthage.tezedge.com',
+      http: 'https://carthage.tezedge.com:8742',
+      debugger: 'https://carthage.tezedge.com:8743',
+      ws: false,
+    },
     // {
     //   id: 'ocaml-mainnet-simplestaking-com',
     //   name: 'ocaml.mainnet.simplestaking.com',

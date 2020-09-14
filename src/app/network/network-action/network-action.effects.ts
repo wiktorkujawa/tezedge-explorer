@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
-import { map, switchMap, withLatestFrom, catchError, tap, filter, takeUntil } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom, catchError, tap, filter, takeUntil, throttle, debounce, flatMap } from 'rxjs/operators';
 import { of, Subject, empty, timer } from 'rxjs';
 
 const networkActionDestroy$ = new Subject();
@@ -17,7 +17,7 @@ export class NetworkActionEffects {
         // merge state
         withLatestFrom(this.store, (action: any, state) => ({ action, state })),
 
-        switchMap(({ action, state }) => {
+        flatMap(({ action, state }) => {
             return this.http.get(
                 state.settingsNode.api.debugger +
                 '/v2/p2p/?' +

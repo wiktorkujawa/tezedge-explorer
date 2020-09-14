@@ -1,9 +1,10 @@
 import {
     Directive, AfterViewInit, DoCheck, OnChanges, ViewRef,
-    IterableDiffer, Input, Output, EventEmitter, ElementRef, ViewContainerRef,
-    Renderer2, TemplateRef, IterableDiffers, SimpleChanges, IterableChanges, OnDestroy
+    Input, Output, EventEmitter, ElementRef, ViewContainerRef,
+    Renderer2, TemplateRef, SimpleChanges, OnDestroy
 } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
+import { of, fromEvent } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 // tslint:disable-next-line: no-conflicting-lifecycle
 @Directive({
@@ -22,11 +23,15 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     private virtualScrollItemsOffset = 0;
 
     private viewportHeight = 0;
-    private cache = new Map<number, ViewRef>();
+
+    private cacheRequestIds = {};
+    private cacheItemsIds = new Set();
+    private cacheItemsEntities = {};
 
     private $scroller: HTMLDivElement = document.createElement('div');
     private $viewport: HTMLElement;
     private scrollListener: () => void;
+
 
     @Input() vsForOf: any;
 
@@ -43,17 +48,15 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         console.log('[ngOnChanges]', changes);
 
         if (this.virtualScrollItemsCount > 0) {
-
             // render items
             this.viewContainer.clear();
             this.renderViewportItems();
-
         }
 
     }
 
     ngDoCheck() {
-        // console.log('[ngDoCheck]', this.vsForOf);
+        console.log('[ngDoCheck]', this.vsForOf);
     }
 
     ngAfterViewInit() {
@@ -94,7 +97,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         // update virtual scroll before next repaint
         window.requestAnimationFrame(() => {
 
-            console.warn('[onScroll] this.$viewport.scrollTop=' + this.$viewport.scrollTop + ' this.viewportHeight=' + this.viewportHeight);
+            console.log('[onScroll] this.$viewport.scrollTop=' + this.$viewport.scrollTop + ' this.viewportHeight=' + this.viewportHeight);
 
             // use currect scroll position to get start and end item index
             let start = Math.floor((this.$viewport.scrollTop - this.viewportHeight) / this.itemHeight);
@@ -107,16 +110,24 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
             // get offset so we can set correct possition for items
             this.virtualScrollItemsOffset = (this.vsForOf.lastCursorId - this.virtualScrollItemsCount);
-            console.warn('[renderViewportItems] this.virtualScrollItemsCount=' + this.virtualScrollItemsCount
+            console.log('[onScroll] this.virtualScrollItemsCount=' + this.virtualScrollItemsCount
                 + ' this.vsForOf.lastCursorId=' + this.vsForOf.lastCursorId);
 
 
             // check if we have new scroll event
-            if (this.scrollPositionStart !== start && this.scrollPositionEnd !== end) {
+            // if (this.scrollPositionStart !== start && this.scrollPositionEnd !== end) {
 
-                // save scroll position
-                this.scrollPositionStart = start;
-                this.scrollPositionEnd = end;
+            // save scroll position
+            this.scrollPositionStart = start;
+            this.scrollPositionEnd = end;
+
+            // cache request postion
+            const requestPositionOffset =
+                Math.round((this.virtualScrollItemsOffset + (this.scrollPositionStart)) / 20) * 20;
+            if (this.cacheRequestIds[requestPositionOffset] !== 'pending') {
+                this.cacheRequestIds[requestPositionOffset] = 'pending';
+
+                console.warn('[onScroll] cacheRequestIds=', requestPositionOffset);
 
                 // emit event to load data for virtual scroll
                 this.getItems.emit({
@@ -125,7 +136,10 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                 });
 
             }
+            // }
 
+            this.viewContainer.clear();
+            this.renderViewportItems();
 
         });
 
@@ -134,7 +148,10 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     private clear() {
         console.log('[clear]');
 
-        this.cache.clear();
+        // clear cache
+        this.cacheRequestIds = {};
+        this.cacheItemsIds = new Set();
+        this.cacheItemsEntities = {};
         this.viewContainer.clear();
     }
 
@@ -165,19 +182,35 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
     private renderViewportItems() {
         // console.warn('[renderViewportItems] this.vsForOf=', this.vsForOf.ids);
+        console.warn('[renderViewportItems]  this.scrollPositionStart=' + this.scrollPositionStart
+            + ' this.scrollPositionEnd=' + this.scrollPositionEnd);
 
-        // prepare items to render
+        // prepare items for render
         for (let index = 0; index < (this.scrollPositionEnd - this.scrollPositionStart); index++) {
+
+            const virutalScroollPosition = this.virtualScrollItemsOffset + index + this.scrollPositionStart;
+
+            // cache value
+            if (this.vsForOf.entities[virutalScroollPosition] && !this.cacheItemsIds.has(virutalScroollPosition)) {
+                this.cacheItemsEntities = {
+                    ...this.cacheItemsEntities,
+                    [virutalScroollPosition]: this.vsForOf.entities[virutalScroollPosition],
+                };
+                this.cacheItemsIds.add(virutalScroollPosition);
+                // console.log('[cache] miss', virutalScroollPosition);
+            }
 
             const view = this.viewContainer.createEmbeddedView(this.template);
             view.context.position = (index + this.scrollPositionStart) * this.itemHeight;
             view.context.$implicit = {
-                index: this.virtualScrollItemsOffset + index + this.scrollPositionStart,
-                ...this.vsForOf.entities[this.virtualScrollItemsOffset + index + this.scrollPositionStart]
+                index: virutalScroollPosition,
+                // ...this.vsForOf.entities[virutalScroollPosition]
+                ...this.cacheItemsEntities[virutalScroollPosition],
             };
             view.context.start = this.scrollPositionStart;
             view.context.end = this.scrollPositionEnd;
             view.context.index = index + this.scrollPositionStart;
+
             view.markForCheck();
 
         }
