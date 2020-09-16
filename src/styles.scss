@@ -1053,6 +1053,16 @@ ngx-json-viewer .segment .segment-main .segment-key {
     .mat-form-field-infix {
         padding-left: 8px !important;
     }
+
+    .mat-form-field-wrapper{
+        height: 100%;
+
+        .mat-form-field-flex{
+            height: 100%;
+            align-items: center;
+        }
+    }
+
 }
 
 /* style for mat-select dropdown panel */
