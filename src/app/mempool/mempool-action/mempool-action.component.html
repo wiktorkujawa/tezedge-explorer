@@ -39,7 +39,7 @@
 
     .item {
         position: absolute;
-        width: calc(100% - 16px);
+        min-width: calc(100% - 16px); 
 
         display: flex;
         align-items: center;
@@ -101,12 +101,13 @@
                 (getItems)="getItems($event)">
                 <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2"
                     (mouseenter)="tableMouseEnter(event)" [class.hover]="event?.id === networkActionItem?.id">
+                    
+                    <span style="display: inline-block; min-width: 100px;">
+                        {{ event.index }}
+                    </span>
                     <!-- <span style="display: inline-block; min-width: 100px;">
-                    {{ event.index }}
-                </span>
-                <span style="display: inline-block; min-width: 100px;">
-                    {{ event.id }}
-                </span> -->
+                        {{ event.id }}
+                    </span> -->
                     <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
                         {{ event?.datetime }}
                     </span>
