@@ -102,9 +102,14 @@
                 <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2"
                     (mouseenter)="tableMouseEnter(event)" [class.hover]="event?.id === networkActionItem?.id">
                     
+                    <!-- For debug only TODO: remove later-->
                     <span style="display: inline-block; min-width: 100px;">
                         {{ event.index }}
                     </span>
+                    <span *ngIf="!event?.datetime" style="display: inline-block; min-width: 100px;">
+                        Loading...
+                    </span>
+                    <!---->
                     <!-- <span style="display: inline-block; min-width: 100px;">
                         {{ event.id }}
                     </span> -->
