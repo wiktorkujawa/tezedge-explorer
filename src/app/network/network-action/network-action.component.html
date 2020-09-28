@@ -55,11 +55,9 @@
 </style>
 
 <div class="network-action-container">
-
+<!-- 
     <div style="width: 1000px;margin-top: 10px;">
-
         <div class="network-action-table-filter">
-
             <span style="padding: 0px 14px 0px 0px; width: 51px;">Control</span>
             <button mat-flat-button [class.active]="networkAction.filter.meta" (click)="filterType('meta')">
                 Meta
@@ -96,12 +94,10 @@
                 Remote
             </button>
 
-
             <span *ngIf="networkAction.urlParams" style="padding:0px 8px 0px 8px; width: 50px;">Address</span>
             <button *ngIf="networkAction.urlParams" mat-flat-button class="active" (click)="filterAddress()">
                 {{ networkAction.urlParams }}
             </button>
-
         </div>
 
         <div class="network-action-table-filter" style="padding-bottom:10px;">
@@ -134,72 +130,83 @@
                 (click)=" filterType('blockOperationsHashes')">
                 Block Operations Hashes
             </button>
+        </div>
+    </div> -->
 
+    <div class="virtual-scroll-wrapper">
+        <div class="virtual-scroll-header">
+            <span style="display: inline-block; min-width: 180px;">
+                DATETIME
+            </span>
+            <span style="display: inline-block; min-width: 180px;">
+                ADDRESS
+            </span>
+            <span style="display: inline-block; min-width: 100px;">
+                SOURCE
+            </span>
+            <span style="display: inline-block; min-width: 180px;">
+                TYPE
+            </span>
         </div>
 
-    </div>
+        <div style="display:flex;flex-direction: row;">
 
-    <div class="table-virtual-scroll">
-        <div style="height:36px;"></div>
-        <div class="table-virtual-scroll-header">
-            <span class="network-action-table-datetime">DATETIME</span>
-            <span class="network-action-table-address">ADDRESS</span>
-            <span class="network-action-table-source">SOURCE</span>
-            <span class="network-action-table-type">TYPE</span>
-            <span class="network-action-table-message">MESSAGE</span>
-        </div>
-
-        <div class="table-virtual-scroll-panel" style="display:flex;flex-direction: row;">
-
-            <cdk-virtual-scroll-viewport style="align-items: flex-start;" class="table-virtual-scroll-viewport"
-                (scrolledIndexChange)="onScroll($event)" [itemSize]="36" [maxBufferPx]="288" [minBufferPx]="288">
-
-                <div *cdkVirtualFor="let even = even;let item of networkActionList" class="table-virtual-scroll-item" 
-                    [class.hover]="item?.id === networkActionItem?.id"
-                    [class.even]="even"
-                    (mouseenter)="tableMouseEnter(item)">
-                    <span class="network-action-table-datetime">
-                        {{item?.datetime}}
-                    </span>
-                    <span class="network-action-table-address">
-                        <a href="#/network/{{ item?.remote_addr }}"> {{ item?.remote_addr }}</a>
-                    </span>
-                    <span class="network-action-table-source">
-                        <span *ngIf="item?.source_type==='local'">
-                            <svg-icon icon="local"></svg-icon>
-                            <svg-icon *ngIf="!item?.incoming" icon="arrow-right"></svg-icon>
-                            <svg-icon *ngIf="item?.incoming" icon="arrow-left"></svg-icon>
-                            <svg-icon icon="remote"></svg-icon>
+            <div class="virtual-scroll-container">
+                <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="position"
+                    (getItems)="getItems($event)">
+                    <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2"
+                        (mouseenter)="tableMouseEnter(event)" [class.hover]="event?.id === networkActionItem?.id">
+                        
+                        <!-- For debug only TODO: remove later-->
+                        <span style="display: inline-block; min-width: 100px;">
+                            {{ event.index }}
                         </span>
-                        <span *ngIf="item?.source_type==='remote'">
-                            <svg-icon icon="remote"></svg-icon>
-                            <svg-icon *ngIf="item?.incoming" icon="arrow-right"></svg-icon>
-                            <svg-icon *ngIf="!item?.incoming" icon="arrow-left"></svg-icon>
-                            <svg-icon icon="local"></svg-icon>
-                        </span> 
+                        <span *ngIf="!event?.datetime" style="display: inline-block; min-width: 100px;">
+                            Loading...
+                        </span>
+                        <!---->
+                        <!-- <span style="display: inline-block; min-width: 100px;">
+                            {{ event.id }}
+                        </span> -->
+                        <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
+                            {{ event?.datetime }}
+                        </span>
+                        <span style="display: inline-block; min-width: 180px;">
+                            <a style="color: #ffffffcc; text-decoration:none;" href="#/network/{{ event?.remote_addr }}">
+                                {{ event?.remote_addr }}</a>
+                        </span>
+                        <span style="display: inline-block; min-width: 100px; color: #ffffffcc">
+                            <span *ngIf="event?.source_type==='local'">
+                                <svg-icon icon="local"></svg-icon>
+                                <svg-icon *ngIf="!event?.incoming" icon="arrow-right"></svg-icon>
+                                <svg-icon *ngIf="event?.incoming" icon="arrow-left"></svg-icon>
+                                <svg-icon icon="remote"></svg-icon>
+                            </span>
+                            <span *ngIf="event?.source_type==='remote'">
+                                <svg-icon icon="remote"></svg-icon>
+                                <svg-icon *ngIf="event?.incoming" icon="arrow-right"></svg-icon>
+                                <svg-icon *ngIf="!event?.incoming" icon="arrow-left"></svg-icon>
+                                <svg-icon icon="local"></svg-icon>
+                            </span>
+                        </span>
+                        <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
+                            {{ event?.category }}<span *ngIf="event?.kind"> | {{ event?.kind }}</span>
+                        </span>
                     </span>
-                    <span class="network-action-table-type" style="white-space: nowrap; text-overflow: ellipsis;font-size:14px !important;">
-                        {{item?.category}}<span *ngIf="item?.kind"> | {{ item?.kind }}</span>
-                    </span>
-                    <!-- <span class="network-action-table-message">
-                    {{item?.preview}}
-                </span> -->
-                </div>
-            </cdk-virtual-scroll-viewport>
+                </ng-template>
+            </div>
 
-            <div class="network-action-table-detail">
-
+            <div class="virtual-scroll-container-detail">
                 <div *ngIf="networkActionItem?.payload">
                     <ngx-json-viewer [json]="networkActionItem?.payload" [expanded]="false">
                     </ngx-json-viewer>
                 </div>
             </div>
-
         </div>
 
-        <div class="table-virtual-scroll-footer">
-            <span>
-                <button mat-icon-button matTooltip="Start" (click)="scrollStart()" *ngIf="!networkAction?.stream">
+        <div class="virtual-scroll-footer">
+            <div class="virtual-scroll-footer-container">
+                <!-- <button mat-icon-button matTooltip="Start" (click)="scrollStart()" *ngIf="!networkAction?.stream">
                     <mat-icon>play_arrow_outline</mat-icon>
                 </button>
                 <button mat-icon-button matTooltip="Stop" (click)="scrollStop()" *ngIf="networkAction?.stream">
@@ -207,8 +214,8 @@
                 </button>
                 <button mat-icon-button matTooltip="Last page" (click)="scrollToEnd()">
                     <mat-icon style="transform: rotate(90deg)">last_page</mat-icon>
-                </button>
-            </span>
+                </button> -->
+            </div>
         </div>
 
     </div>

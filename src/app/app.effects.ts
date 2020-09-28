@@ -33,10 +33,10 @@ export class AppEffects {
                     redirectUrl = 'wallets';
                 }
                 else if (action.payload.ws === false) {
-                    redirectUrl = 'monitoring';
+                    redirectUrl = 'network';
                     // redirectUrl = 'mempool';
                 } else {
-                    redirectUrl = 'monitoring';
+                    redirectUrl = 'network';
                     // redirectUrl = 'mempool';
                 }
             } else {
