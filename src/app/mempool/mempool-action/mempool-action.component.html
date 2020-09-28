@@ -22,7 +22,7 @@
           </ng-container>
   
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="clickWallet(row)" 
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="clickMempoolItem(row)" 
             (mouseenter)="tableMouseEnter(row)" (mouseleave)="tableMouseLeave()" 
             [class.selected]="row?.id === mempoolClickedItem?.id" [class.hovered]="row?.id === mempoolSelectedItem?.id && mempoolSelectedItem?.id !== mempoolClickedItem?.id"></tr>
         </table>  

@@ -76,7 +76,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
   }
 
   // set clicked mempool item
-  clickWallet(item: any){    
+  clickMempoolItem(item: any){    
     this.mempoolClickedItem = item;
     this.mempoolSelectedItem = this.mempoolClickedItem;
   }
