@@ -39,7 +39,7 @@
 		<div class="form-field">
 			<p class="from-field-title">P2P Port</p>
 			<div class="inline-wrapper">
-				<mat-form-field class="small-size">
+				<mat-form-field class="small-size readonly">
 					<input matInput readonly #p2pPort type="number" formControlName="p2pPort" />
 				</mat-form-field>
 				<p class="from-field-description">Specify port for peer to peer communication.</p>
@@ -57,7 +57,7 @@
 		<div class="form-field">
 			<p class="from-field-title">RPC Port</p>
 			<div class="inline-wrapper">
-				<mat-form-field class="small-size">
+				<mat-form-field class="small-size readonly">
 					<input matInput readonly #rpcPort type="number" formControlName="rpcPort" />
 				</mat-form-field>
 				<p class="from-field-description">
@@ -79,7 +79,7 @@
 		<div class="form-field">
 			<p class="from-field-title">Monitor port</p>
 			<div class="inline-wrapper">
-				<mat-form-field class="small-size">
+				<mat-form-field class="small-size readonly">
 					<input matInput readonly #monitorPort type="number" formControlName="monitorPort" />
 				</mat-form-field>
 				<p class="from-field-description">Port on which the Tezedge node monitoring information will be exposed
@@ -102,7 +102,7 @@
 				address, on
 				which this websocket will be accessible.
 			</p>
-			<mat-form-field class="half-size">
+			<mat-form-field class="half-size readonly">
 				<input matInput readonly #webSocketAddress type="text" formControlName="webSocketAddress" />
 			</mat-form-field>
 			<mat-error *ngIf="chainServerForm.controls.webSocketAddress.invalid">
@@ -201,10 +201,11 @@
 			<p class="from-field-description">
 				Specify the Tezos environment for this node.
 			</p>
-			<mat-form-field class="half-size">
-				<mat-select #network formControlName="network" disableOptionCentering panelClass="chain-select-panel">
+			<mat-form-field class="half-size readonly">
+				<input matInput readonly #network type="text" formControlName="network" />
+				<!-- <mat-select #network formControlName="network" disableOptionCentering panelClass="chain-select-panel">
 					<mat-option value="sandbox">sandbox</mat-option>
-				</mat-select>
+				</mat-select> -->
 			</mat-form-field>
 			<mat-error *ngIf="chainServerForm.controls.network.invalid">
 				<span *ngIf="chainServerForm.controls.network.errors.required">This field is required</span>

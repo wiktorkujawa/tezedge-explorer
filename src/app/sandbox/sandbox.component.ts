@@ -112,6 +112,15 @@ export class SandboxComponent implements OnInit, OnDestroy{
 
   closePage(){
     this.toggleSidenavVisibility(true);
+
+    // If user configured server step and started node - stop it
+    if(this.stepper.selectedIndex > 0){
+      this.store.dispatch({
+        type: 'SANDBOX_NODE_STOP',
+        payload: '',
+      });
+    }
+
     this.router.navigate(['/monitoring']);
   }
   
