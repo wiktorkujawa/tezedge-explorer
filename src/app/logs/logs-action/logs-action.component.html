@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
     .logs-action-table-datetime {
         display: inline-block;
         min-width: 170px;
@@ -13,58 +13,63 @@
         display: inline-block;
         min-width: 725px;
     }
-</style>
+</style> -->
 
 <div class="logs-action-container">
-
-    <div class="table-virtual-scroll">
-        <div style="height:36px;"></div>
-        <div class="table-virtual-scroll-header">
-            <span class="logs-action-table-datetime">DATETIME</span>
-            <span class="logs-action-table-level">LEVEL</span>
-            <span class="logs-action-table-message">MESSAGE</span>
-        </div>
-
-        <div class="table-virtual-scroll-panel" style="display:flex;flex-direction: row;">
-
-            <cdk-virtual-scroll-viewport style="align-items: flex-start;" class="logs-action-table-viewport"
-                (scrolledIndexChange)="onScroll($event)" 
-                [itemSize]="36" [maxBufferPx]="288" [minBufferPx]="288">
-                
-                <div *cdkVirtualFor="let even=even;let item of logsActionList"  class="table-virtual-scroll-item"
-                    (mouseenter)="tableMouseEnter(item)"
-                    [class.even]="even"
-                    [class.hover]="item?.id === logsActionItem?.id">
-
-                    <span class="logs-action-table-datetime">{{item?.datetime}}</span>
-                    <span class="logs-action-table-level">{{item?.level}}</span>
-                    <span class="logs-action-table-message" style="white-space: nowrap; text-overflow: ellipsis;font-size:14px !important;">{{item?.preview}}</span>
-                </div>
-            </cdk-virtual-scroll-viewport>
-
-            <div class="logs-action-table-detail">
-                <div *ngIf="logsActionItem?.message">
-
-                    <ngx-json-viewer [json]="{message:logsActionItem?.message}" [expanded]="true">
-                    </ngx-json-viewer>
-
-                </div>
-            </div>
-
-        </div>
-        <div class="table-virtual-scroll-footer">
-            <span>
-                <button mat-icon-button matTooltip="Start" (click)="scrollStart()" *ngIf="!logsAction?.stream">
-                    <mat-icon>play_arrow_outline</mat-icon>
-                </button>
-                <button mat-icon-button matTooltip="Stop" (click)="scrollStop()" *ngIf="logsAction?.stream">
-                    <mat-icon>stop_outline</mat-icon>
-                </button>
-                <button mat-icon-button style="transform: rotate(90deg)" matTooltip="Last page" (click)="scrollToEnd()">
-                    <mat-icon>last_page</mat-icon>
-                </button>
+    <div class="virtual-scroll-wrapper">
+        <!-- <div class="virtual-scroll-filters">
+            
+        </div> -->
+        
+        <div class="virtual-scroll-header">
+            <span style="display: inline-block; min-width: 180px;">
+                DATETIME
+            </span>
+            <span style="display: inline-block; min-width: 180px;">
+                LEVEL
+            </span>
+            <span style="display: inline-block; min-width: 100px;">
+                MESSAGE
             </span>
         </div>
-    </div>
 
+        <div style="display:flex;flex-direction: row;">
+            <div class="virtual-scroll-container">
+                <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="position"
+                    (getItems)="getItems($event)">
+                    <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2"
+                        (click)="clickedItem(event)" (mouseenter)="tableMouseEnter(event)" (mouseleave)="tableMouseLeave()" 
+                        [class.selected]="event?.id === logsClickedItem?.id" [class.hovered]="event?.id === logsActionItem?.id && logsActionItem?.id !== logsClickedItem?.id">
+                        
+                        <span style="display: inline-block; min-width: 180px;">{{event?.datetime}}</span>
+                        <span style="display: inline-block; min-width: 180px;">{{event?.level}}</span>
+                        <span style="display: inline-block; min-width: 180px; white-space: nowrap; text-overflow: ellipsis;font-size:14px !important;">{{event?.preview}}</span>
+                    </span>
+                </ng-template>
+            </div>
+
+            <div class="virtual-scroll-container-detail">
+                <div *ngIf="logsActionItem?.message">
+                    <ngx-json-viewer [json]="{message:logsActionItem?.message}" [expanded]="true">
+                    </ngx-json-viewer>
+                </div>
+            </div>
+        </div>
+
+        <div class="virtual-scroll-footer">
+            <div class="virtual-scroll-footer-container">
+                <span>
+                    <!-- <button mat-icon-button matTooltip="Start" (click)="scrollStart()" *ngIf="!logsAction?.stream">
+                        <mat-icon>play_arrow_outline</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Stop" (click)="scrollStop()" *ngIf="logsAction?.stream">
+                        <mat-icon>stop_outline</mat-icon>
+                    </button>
+                    <button mat-icon-button style="transform: rotate(90deg)" matTooltip="Last page" (click)="scrollToEnd()">
+                        <mat-icon>last_page</mat-icon>
+                    </button> -->
+                </span>
+            </div>
+        </div>
+    </div>
 </div>

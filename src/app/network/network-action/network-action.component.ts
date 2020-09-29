@@ -27,8 +27,6 @@ export class NetworkActionComponent implements OnInit {
 
   public onDestroy$ = new Subject();
 
-  public ITEM_SIZE = 36;
-
   @ViewChild(CdkVirtualScrollViewport) viewPort: CdkVirtualScrollViewport;
   @ViewChild(VirtualScrollDirective) vrFor: VirtualScrollDirective;
 
@@ -76,11 +74,9 @@ export class NetworkActionComponent implements OnInit {
 
       }
 
+      // show details for last item
       if(!this.networkActionItem && data?.ids.length){
         this.networkActionItem = data?.entities[data.entities.length-1];
-        if(!this.networkClickedItem || !data.entities[this.networkClickedItem.id]){
-          this.networkClickedItem = this.networkActionItem;
-        }
       }
     });
 
@@ -114,8 +110,8 @@ export class NetworkActionComponent implements OnInit {
     this.router.navigate(['network'])
   }
 
-  // set clicked mempool item
-  clickMempoolItem(item: any){    
+  // set clicked item
+  clickedItem(item: any){    
     if(this.networkClickedItem?.id !== item.id) {
       this.networkClickedItem = item;
       this.networkActionItem = this.networkClickedItem;

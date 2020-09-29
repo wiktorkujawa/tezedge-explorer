@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
@@ -7,28 +7,29 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { VirtualScrollDirective } from 'src/app/shared/virtual-scroll.directive';
 
 @Component({
   selector: 'app-logs-action',
   templateUrl: './logs-action.component.html',
-  styleUrls: ['./logs-action.component.scss']
+  styleUrls: ['./logs-action.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogsActionComponent implements OnInit, OnDestroy {
-
-  public logsAction;
-  public logsActionList = [];
-  public logsActionItem
-  public logsActionShow;
+  public logsActionItem;
+  public logsClickedItem;
+  public logsActionlastCursorId = 0;
+  public virtualScrollItems;
 
   public onDestroy$ = new Subject();
 
-  public ITEM_SIZE = 36;
-
   @ViewChild(CdkVirtualScrollViewport) viewPort: CdkVirtualScrollViewport;
+  @ViewChild(VirtualScrollDirective) vrFor: VirtualScrollDirective;
 
   constructor(
     public store: Store<any>,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -42,89 +43,60 @@ export class LogsActionComponent implements OnInit, OnDestroy {
     this.store.select('logsAction')
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(data => {
-
-        this.logsAction = data;
-        this.logsActionShow = data.ids.length > 0 ? true : false;
+        this.virtualScrollItems = data;
+        this.changeDetector.markForCheck();
         
-        this.logsActionList = data.ids.map(id => ({ id, ...data.entities[id] }));
-        
-        // set viewport at the end
-        if (this.logsActionShow) {
-
-          const viewPortRange = this.viewPort && this.viewPort.getRenderedRange() ?
-            this.viewPort.getRenderedRange() : { start: 0, end: 0 };
-          const viewPortItemLength = this.logsActionList.length;
-
-          // set hover
-          this.logsActionItem = this.logsActionList[this.logsActionList.length - 1];
-
-          // trigger only if we are streaming and not at the end of page
-          if (data.stream && viewPortItemLength > 0 && (viewPortRange.end !== viewPortItemLength) &&
-            (viewPortRange.start !== viewPortRange.end)) {
-            // console.log('[set][scrollToOffset] ', data.stream, this.logsActionList.length, viewPortItemLength, viewPortRange);
-
-            setTimeout(() => {
-              const offset = this.ITEM_SIZE * this.logsActionList.length;
-              // set scroll
-              this.viewPort.scrollToOffset(offset);
-
-            });
-
-          }
-
+        console.log('[logsAction] data', data);
+        if (this.logsActionlastCursorId < data.lastCursorId) {
+            this.logsActionlastCursorId = data.lastCursorId;
+          setTimeout(() => {
+            this.vrFor.scrollToBottom();
+          });
+        }
+  
+        // show details for last item
+        if(!this.logsActionItem && data?.ids.length){
+          this.logsActionItem = data?.entities[data.entities.length-1];
         }
       });
-
   }
   
-  onScroll(index) {
+  getItems($event) {
+    console.warn('[logs-action][getItems]', $event);
+    this.store.dispatch({
+      type: 'LOGS_ACTION_LOAD',
+      payload: {
+        cursor_id: $event.end
+      },
+    });
+  }
 
-    if (this.logsActionList.length - index > 15) {
-      // stop log actions stream
-      this.store.dispatch({
-        type: 'LOGS_ACTION_STOP',
-        payload: event,
-      });
-    } else {
-      // start log actions stream
-      this.store.dispatch({
-        type: 'LOGS_ACTION_START',
-        payload: event,
-      });
+
+  // set clicked item
+  clickedItem(item: any){    
+    if(this.logsClickedItem?.id !== item.id) {
+      this.logsClickedItem = item;
+      this.logsActionItem = this.logsClickedItem;
+      this.changeDetector.detectChanges();
     }
-
   }
 
-  scrollStart() {
-
-    // triger action and get logs data
-    this.store.dispatch({
-      type: 'LOGS_ACTION_START',
-    });
-
+  // set temporary select item on hover
+  tableMouseEnter(item: any){
+    this.logsActionItem = item;
+    this.changeDetector.detectChanges();
   }
 
-  scrollStop() {
-
-    // stop streaming logs actions
-    this.store.dispatch({
-      type: 'LOGS_ACTION_STOP',
-    });
-
+  // set clicked item again as selected on hover leave
+  tableMouseLeave(){
+    this.logsActionItem = this.logsClickedItem;
+    this.changeDetector.detectChanges();
   }
-  
+
   scrollToEnd() {
-
-    const offset = this.ITEM_SIZE * this.logsActionList.length;
-    this.viewPort.scrollToOffset(offset);
-  
+    this.vrFor.scrollToBottom();
   }
-  
-  tableMouseEnter(item) {
 
-    this.logsActionItem = item
-
-  }
 
   ngOnDestroy() {
 

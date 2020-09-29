@@ -864,13 +864,13 @@ ngx-json-viewer .segment .segment-main .segment-key {
     word-break: break-all;
 }
 
-.logs-action-container {
-    display: flex;
-    align-items: center;
-    // justify-content: center;
-    flex-direction: column;
-    margin-top: 25px;
-}
+// .logs-action-container {
+//     display: flex;
+//     align-items: center;
+//     // justify-content: center;
+//     flex-direction: column;
+//     margin-top: 25px;
+// }
 
 
 .logs-action-table-viewport {
@@ -1230,7 +1230,8 @@ ngx-json-viewer .segment .segment-main .segment-key {
 .chain-wallets,
 .wallets,
 .mempool,
-.network-action-container{
+.network-action-container,
+.logs-action-container{
     .mat-table {
         border-radius: 4px;
 
@@ -1577,7 +1578,8 @@ input.mat-input-element {
 }
 
 .mempool,
-.network-action-container {
+.network-action-container,
+.logs-action-container {
     background-color: $color-table-background;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
