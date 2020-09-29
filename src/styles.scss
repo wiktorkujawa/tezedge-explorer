@@ -1706,7 +1706,7 @@ input.mat-input-element {
                 background-color: #323334;
             }
             &.selected {
-                background-color: $color-highlight-blue;
+                background-color: #8C6141;
                 color: #fff;
             }
             &.hovered {
@@ -1714,10 +1714,10 @@ input.mat-input-element {
             }
         }
     
-        .item:hover {
-            background-color: #8C6141;
-            /* #204E8A; */
-        }
+        // .item:hover {
+        //     background-color: #8C6141;
+        //     /* #204E8A; */
+        // }
     }
     .virtual-scroll-container-detail {
         align-items: flex-end;
