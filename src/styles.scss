@@ -1705,6 +1705,13 @@ input.mat-input-element {
             &.virtualScrollRowEven {
                 background-color: #323334;
             }
+            &.selected {
+                background-color: $color-highlight-blue;
+                color: #fff;
+            }
+            &.hovered {
+                background-color: #a4a4a540; //fade-out($color-focus, 0.8);
+            }
         }
     
         .item:hover {
