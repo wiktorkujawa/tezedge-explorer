@@ -76,14 +76,11 @@ export class NetworkActionComponent implements OnInit {
 
       }
 
-      if(data?.ids.length){
+      if(!this.networkActionItem && data?.ids.length){
         this.networkActionItem = data?.entities[data.entities.length-1];
         if(!this.networkClickedItem || !data.entities[this.networkClickedItem.id]){
           this.networkClickedItem = this.networkActionItem;
         }
-      } else {
-        this.networkActionItem = null;
-        this.networkClickedItem = null;
       }
     });
 
