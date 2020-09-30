@@ -44,7 +44,7 @@ export class NetworkActionComponent implements OnInit {
 
         // triger action and get network data
         this.store.dispatch({
-          type: 'NETWORK_ACTION_LOAD',
+          type: 'NETWORK_ACTION_START',
           payload: {
             filter: params.address ? params.address : ''
           },
@@ -75,8 +75,9 @@ export class NetworkActionComponent implements OnInit {
       }
 
       // show details for last item
-      if(!this.networkActionItem && data?.ids.length){
-        this.networkActionItem = data?.entities[data.entities.length-1];
+      if(!this.networkClickedItem && data && data.ids.length){
+        this.networkActionItem = data.entities[data.ids[data.ids.length-1]];
+        this.networkClickedItem = this.networkActionItem;
       }
     });
 
@@ -88,13 +89,19 @@ export class NetworkActionComponent implements OnInit {
   }
 
   getItems($event) {
-    console.warn('[network-action][getItems]', $event);
-    this.store.dispatch({
-      type: 'NETWORK_ACTION_LOAD',
-      payload: {
-        cursor_id: $event.end
-      },
-    });
+    console.warn('[network-action][getItems]', $event, this.virtualScrollItems.stream);
+    if (this.virtualScrollItems.stream) {
+      this.store.dispatch({
+        type: 'NETWORK_ACTION_START',
+      });
+    } else {
+      this.store.dispatch({
+        type: 'NETWORK_ACTION_LOAD',
+        payload: {
+          cursor_id: $event.end
+        },
+      });
+    }
   }
 
   filterType(filterType) {
@@ -135,35 +142,28 @@ export class NetworkActionComponent implements OnInit {
     this.vrFor.scrollToBottom();
   }
 
-  // onScroll(index) {
-  //   if (this.networkActionList.length - index > 15) {
-  //     // stop log actions stream
-  //     this.store.dispatch({
-  //       type: 'NETWORK_ACTION_STOP',
-  //       payload: event,
-  //     });
-  //   } else {
-  //     // start log actions stream
-  //     this.store.dispatch({
-  //       type: 'NETWORK_ACTION_START',
-  //       payload: event,
-  //     });
+  // onScroll() {
+  //   if (this.virtualScrollItems.stream) {
+  //     console.log('[network-action][onScroll]');
+  //     this.stopStream();
   //   }
   // }
 
-  // scrollStart() {
-  //   // triger action and get action data
-  //   this.store.dispatch({
-  //     type: 'NETWORK_ACTION_START'
-  //   });
-  // }
+  startStream() {
+    console.log('[network-action][startStream]');
+    // triger action and get action data
+    this.store.dispatch({
+      type: 'NETWORK_ACTION_START'
+    });
+  }
 
-  // scrollStop() {
-  //   // stop streaming actions
-  //   this.store.dispatch({
-  //     type: 'NETWORK_ACTION_STOP'
-  //   });
-  // }
+  stopStream() {
+    console.log('[network-action][stopStream]');
+    // stop streaming actions
+    this.store.dispatch({
+      type: 'NETWORK_ACTION_STOP'
+    });
+  }
 
   // scrollToEnd() {
   //   const offset = this.ITEM_SIZE * this.networkActionList.length;

@@ -179,11 +179,12 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     private load() {
         console.log('[load]');
 
-        this.clear();
+        // TODO: should we clear on load?
+        // this.clear();
 
         // set row height in virtual scroll
         console.log('[load] this.itemHeight=' + this.itemHeight);
-        this.itemHeight = 36;
+        this.itemHeight = 32;
 
         // get number of items in virtual scroll
         console.log('[load] vsForOf.lastCursorId=', this.vsForOf.lastCursorId);
@@ -201,7 +202,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     private renderViewportItems() {
-        this.ngZone.runOutsideAngular(() => {
+        // this.ngZone.runOutsideAngular(() => {
         // requestAnimationFrame(() => {
 
         console.warn('[renderViewportItems]');
@@ -262,7 +263,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             view.markForCheck();
         }
         // })
-        });
+        // });
     }
 
     // Renders blank rows while content is loading

@@ -1742,6 +1742,26 @@ input.mat-input-element {
             height: 100%;
             border-radius: 4px;
             background-color: #323334;
+
+            .action-button{
+                color: $color-focus;
+                line-height: normal;
+                font-size: 12px; 
+                font-weight: 300;
+                padding: 4px 8px;
+                cursor: pointer;
+                margin: 0 2px;
+
+                &.live.active {
+                    background-color: $color-highlight-green;
+                }
+                &.paused.active {
+                    background-color: $color-highlight-red;
+                }
+                &.latest{
+                    background-color: fade-out($color-focus, 0.9);
+                }
+            }
         }
     }
 }

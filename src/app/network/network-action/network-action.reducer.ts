@@ -128,10 +128,9 @@ export function reducer(state = initialState, action) {
                     }, {}),
                 lastCursorId: action.payload.length > 0 && state.lastCursorId < action.payload[0].id ?
                     action.payload[0].id : state.lastCursorId,
-                stream: true,
+                stream: action.type == 'NETWORK_ACTION_START_SUCCESS',
             };
         }
-
         case 'NETWORK_ACTION_STOP': {
             return {
                 ...state,
