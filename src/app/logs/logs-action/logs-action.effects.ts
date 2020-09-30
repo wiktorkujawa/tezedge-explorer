@@ -19,8 +19,8 @@ export class LogsActionEffects {
 
         switchMap(({ action, state }) => {
             // console.log('[LOGS_ACTION_LOAD]', action);
-            const cursorId = action.payload ? 'cursor_id=' + action.payload + '&' : '';
-            return this.http.get(state.settingsNode.api.debugger + '/v2/log/?' + cursorId + 'limit=30');
+            const cursorId = action.payload ? 'cursor_id=' + action.payload.cursor_id + '&' : '';
+            return this.http.get(state.settingsNode.api.debugger + '/v2/log/?' + cursorId + 'limit=100');
         }),
 
         // dispatch action
