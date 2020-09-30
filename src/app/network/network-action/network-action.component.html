@@ -115,9 +115,11 @@
                         <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
                             {{ event?.datetime }}
                         </span>
-                        <span style="display: inline-block; min-width: 180px;">
-                            <a style="color: #ffffffcc; text-decoration:none;" href="#/network/{{ event?.remote_addr }}">
-                                {{ event?.remote_addr }}</a>
+                        <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
+                            <!-- TODO: do we need the link to network on network?? -->
+                            <!-- <a style="color: #ffffffcc; text-decoration:none;" href="#/network/{{ event?.remote_addr }}">
+                                {{ event?.remote_addr }}</a> -->
+                            {{ event?.remote_addr }}
                         </span>
                         <span style="display: inline-block; min-width: 100px; color: #ffffffcc">
                             <span *ngIf="event?.source_type==='local'">

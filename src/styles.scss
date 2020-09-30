@@ -1687,7 +1687,8 @@ input.mat-input-element {
     }
     .virtual-scroll-container {
         position: relative;
-        width: 60%;
+        // width: 60%;
+        flex: 0 0 60%;
         height: calc(95vh - 74px);
         /* must be multiple of itemSize*/
         /* height: 500px; */
@@ -1726,7 +1727,8 @@ input.mat-input-element {
     }
     .virtual-scroll-container-detail {
         align-items: flex-end;
-        width: 40%;
+        // width: 40%;
+        flex: 0 0 40%;
         overflow-y: overlay;
         padding: 10px 10px 0px 20px;
         border-left: 1px solid #333334;
@@ -1760,6 +1762,10 @@ input.mat-input-element {
                 }
                 &.latest{
                     background-color: fade-out($color-focus, 0.9);
+                }
+
+                .icon{
+                    margin-top: -1px;
                 }
             }
         }

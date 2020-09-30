@@ -120,25 +120,23 @@ export class NetworkActionComponent implements OnInit {
   // set clicked item
   clickedItem(item: any){    
     if(this.networkClickedItem?.id !== item.id) {
-      this.networkClickedItem = item;
-      this.networkActionItem = this.networkClickedItem;
-      this.changeDetector.detectChanges();
+      this.networkClickedItem = {...item};
+      this.networkActionItem = {...this.networkClickedItem};
     }
   }
 
   // set temporary select item on hover
   tableMouseEnter(item: any){
-    this.networkActionItem = item;
-    this.changeDetector.detectChanges();
+    this.networkActionItem = {...item};
   }
 
   // set clicked item again as selected on hover leave
   tableMouseLeave(){
-    this.networkActionItem = this.networkClickedItem;
-    this.changeDetector.detectChanges();
+    this.networkActionItem = {...this.networkClickedItem};
   }
 
   scrollToEnd() {
+    console.log('[network-action][scrollToEnd]');
     this.vrFor.scrollToBottom();
     this.startStream();
   }
