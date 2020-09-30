@@ -140,14 +140,26 @@ export class NetworkActionComponent implements OnInit {
 
   scrollToEnd() {
     this.vrFor.scrollToBottom();
+    this.startStream();
   }
 
-  // onScroll() {
-  //   if (this.virtualScrollItems.stream) {
-  //     console.log('[network-action][onScroll]');
-  //     this.stopStream();
-  //   }
-  // }
+  onScroll() {
+    // stop stream once user started scrolling
+    if (this.virtualScrollItems.stream) {
+      console.log('[network-action][onScroll]');
+      this.stopStream();
+    }
+  }
+
+  // manual stream toggle (live/paused)
+  toggleStream(value:boolean){
+    if(value === true){
+      this.scrollToEnd();
+      // this.startStream();
+    } else {
+      this.stopStream();
+    }
+  }
 
   startStream() {
     console.log('[network-action][startStream]');

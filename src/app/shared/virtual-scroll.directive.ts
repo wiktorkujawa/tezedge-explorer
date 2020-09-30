@@ -41,6 +41,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     @Input() vsForOf: any;
 
     @Output() getItems = new EventEmitter<any>();
+    @Output() scrollChanged = new EventEmitter<any>();
 
     constructor(
         private element: ElementRef,
@@ -112,6 +113,10 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             // trigger only if user scrolled vertically
             if(this.prevScrollTop != currentScrollTop){
                 console.log('[onScroll]');
+
+                // Emit scroll changed event
+                this.scrollChanged.emit();
+                
                 // console.log('[onScroll] currentScrollTop=' + currentScrollTop + ' this.viewportHeight=' + this.viewportHeight);
 
                 // use currect scroll position to get start and end item index
