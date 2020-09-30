@@ -12,7 +12,7 @@ import { takeUntil, throttleTime } from 'rxjs/operators';
 })
 export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChanges, DoCheck {
 
-    private itemHeight = 36;
+    private itemHeight = 32;
     private maxScrollHeight = 0;
     private scrollPositionStart = 0;
     private scrollPositionEnd = 0;

@@ -99,7 +99,7 @@
                     (getItems)="getItems($event)">
                     <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2"
                         (click)="clickedItem(event)" (mouseenter)="tableMouseEnter(event)" (mouseleave)="tableMouseLeave()" 
-                        [class.selected]="event?.id === networkClickedItem?.id" [class.hovered]="event?.id === networkActionItem?.id && networkActionItem?.id !== networkClickedItem?.id">
+                        [class.selected]="event?.id === networkClickedItem?.id" [class.hovered]="event?.id && event?.id === networkActionItem?.id && networkActionItem?.id !== networkClickedItem?.id">
 
                         <!-- For debug only TODO: remove later -->
                         <!-- <span style="display: inline-block; min-width: 180px;">

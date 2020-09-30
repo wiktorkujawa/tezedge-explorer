@@ -1695,12 +1695,15 @@ input.mat-input-element {
         z-index: 999;
     
         .item {
+            cursor: pointer;
             position: absolute;
             min-width: calc(100% - 16px); 
             display: flex;
             align-items: center;
-            height: 36px;
-            font-size: 14px;
+            // height: 36px;
+            // font-size: 14px;
+            height: 32px;
+            font-size: 12px;
             padding-left: 16px;
             color: white;
     
@@ -1708,7 +1711,7 @@ input.mat-input-element {
                 background-color: #323334;
             }
             &.selected {
-                background-color: #8C6141;
+                background-color: $color-highlight-blue;
                 color: #fff;
             }
             &.hovered {
