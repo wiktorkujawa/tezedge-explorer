@@ -4,6 +4,7 @@ const initialState: any = {
     ids: [],
     idsFilter: [],
     entities: {},
+    lastCursorId: 0,
     stream: false,
 };
 
@@ -27,7 +28,9 @@ export function reducer(state = initialState, action) {
                             }
                         };
                     }, {}),
-                stream: true,
+                lastCursorId: action.payload.length > 0 && state.lastCursorId < action.payload[0].id ?
+                    action.payload[0].id : state.lastCursorId,
+                stream: false,
             };
         }
 
@@ -50,6 +53,8 @@ export function reducer(state = initialState, action) {
                             }
                         };
                     }, {}),
+                lastCursorId: action.payload.length > 0 && state.lastCursorId < action.payload[0].id ?
+                    action.payload[0].id : state.lastCursorId,
                 stream: true,
             };
         }
