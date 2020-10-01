@@ -58,17 +58,21 @@
 
         <div class="virtual-scroll-footer">
             <div class="virtual-scroll-footer-container">
-                <span>
-                    <!-- <button mat-icon-button matTooltip="Start" (click)="scrollStart()" *ngIf="!logsAction?.stream">
-                        <mat-icon>play_arrow_outline</mat-icon>
-                    </button>
-                    <button mat-icon-button matTooltip="Stop" (click)="scrollStop()" *ngIf="logsAction?.stream">
-                        <mat-icon>stop_outline</mat-icon>
-                    </button>
-                    <button mat-icon-button style="transform: rotate(90deg)" matTooltip="Last page" (click)="scrollToEnd()">
-                        <mat-icon>last_page</mat-icon>
+                <div style="padding: 4px;">
+                    <!-- <button class="action-button latest" (click)="scrollToEnd()" mat-button>
+                        <img class="icon" src="../../../assets/icon/arrow-to-bottom.svg" />
                     </button> -->
-                </span>
+    
+                    <button (click)="toggleStream(true)" [class.active]="virtualScrollItems?.stream" class="action-button live" mat-button> 
+                        <img class="icon" src="../../../assets/icon/play-circle.svg" />
+                        LIVE 
+                    </button>
+    
+                    <button (click)="toggleStream(false)" [class.active]="!virtualScrollItems?.stream" class="action-button paused" mat-button> 
+                        <img class="icon" src="../../../assets/icon/pause-circle.svg" />
+                        PAUSED 
+                    </button>
+                </div>
             </div>
         </div>
     </div>

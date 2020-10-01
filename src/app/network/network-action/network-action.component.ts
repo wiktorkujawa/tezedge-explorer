@@ -59,9 +59,8 @@ export class NetworkActionComponent implements OnInit {
       this.changeDetector.markForCheck();
 
       console.log('[networkAction] data', data);
+      // console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
       if (this.networkActionlastCursorId < data.lastCursorId) {
-
-        // console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
         this.networkActionlastCursorId = data.lastCursorId;
 
         setTimeout(() => {
@@ -181,6 +180,7 @@ export class NetworkActionComponent implements OnInit {
   // }
 
   ngOnDestroy() {
+    console.log('[network-action][onDestroy]');
 
     // stop streaming actions
     this.store.dispatch({

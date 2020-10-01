@@ -36,7 +36,7 @@ export class LogsActionComponent implements OnInit, OnDestroy {
 
     // triger action and get logs data
     this.store.dispatch({
-      type: 'LOGS_ACTION_LOAD',
+      type: 'LOGS_ACTION_START',
     });
 
     // wait for data changes from redux
@@ -47,7 +47,7 @@ export class LogsActionComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
         
         console.log('[logsAction] data', data);
-        // console.error(this.logsActionlastCursorId, '<',  data.lastCursorId);
+        // console.error(this.logsActionlastCursorId, '<',  data.lastCursorId, `(${this.logsActionlastCursorId < data.lastCursorId})`);
         if (this.logsActionlastCursorId < data.lastCursorId) {
             this.logsActionlastCursorId = data.lastCursorId;
           setTimeout(() => {
@@ -64,44 +64,82 @@ export class LogsActionComponent implements OnInit, OnDestroy {
   }
   
   getItems($event) {
-    console.warn('[logs-action][getItems]', $event);
-    this.store.dispatch({
-      type: 'LOGS_ACTION_LOAD',
-      payload: {
-        cursor_id: $event.end
-      },
-    });
+    console.warn('[logs-action][getItems]', $event, this.virtualScrollItems.stream);
+    if (this.virtualScrollItems.stream) {
+      this.store.dispatch({
+        type: 'LOGS_ACTION_START',
+      });
+    } else {
+      this.store.dispatch({
+        type: 'LOGS_ACTION_LOAD',
+        payload: {
+          cursor_id: $event.end
+        },
+      });
+    }
   }
 
 
   // set clicked item
   clickedItem(item: any){    
     if(this.logsClickedItem?.id !== item.id) {
-      this.logsClickedItem = item;
-      this.logsActionItem = this.logsClickedItem;
-      this.changeDetector.detectChanges();
+      this.logsClickedItem = {...item};
+      this.logsActionItem = {...this.logsClickedItem};
     }
   }
 
   // set temporary select item on hover
   tableMouseEnter(item: any){
-    this.logsActionItem = item;
-    this.changeDetector.detectChanges();
+    this.logsActionItem = {...item};
   }
 
   // set clicked item again as selected on hover leave
   tableMouseLeave(){
-    this.logsActionItem = this.logsClickedItem;
-    this.changeDetector.detectChanges();
+    this.logsActionItem = {...this.logsClickedItem};
   }
 
   scrollToEnd() {
+    console.log('[logs-action][scrollToEnd]');
     this.vrFor.scrollToBottom();
+    this.startStream();
   }
 
+  onScroll() {
+    // stop stream once user started scrolling
+    if (this.virtualScrollItems.stream) {
+      console.log('[logs-action][onScroll]');
+      this.stopStream();
+    }
+  }
+
+  // manual stream toggle (live/paused)
+  toggleStream(value:boolean){
+    if(value === true){
+      this.scrollToEnd();
+      // this.startStream();
+    } else {
+      this.stopStream();
+    }
+  }
+
+  startStream() {
+    console.log('[logs-action][startStream]');
+    // triger action and get action data
+    this.store.dispatch({
+      type: 'LOGS_ACTION_START'
+    });
+  }
+
+  stopStream() {
+    console.log('[logs-action][stopStream]');
+    // stop streaming actions
+    this.store.dispatch({
+      type: 'LOGS_ACTION_STOP'
+    });
+  }
 
   ngOnDestroy() {
-
+    console.log('[logs-action][ngOnDestroy]');
     // stop logs stream
     this.store.dispatch({
       type: 'LOGS_ACTION_STOP',

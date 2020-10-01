@@ -5,7 +5,7 @@ const initialState: any = {
     idsFilter: [],
     entities: {},
     lastCursorId: 0,
-    stream: false,
+    stream: true,
 };
 
 export function reducer(state = initialState, action) {
@@ -46,9 +46,7 @@ export function reducer(state = initialState, action) {
                             ...accumulator,
                             [logsAction.id]: {
                                 ...logsAction,
-                                preview: logsAction.message,
-                                // preview: logsAction.message.length > 80 ?
-                                //  logsAction.message.substring(0, 80) + '...' : logsAction.message,
+                                preview: logsAction.message.length > 20 ? logsAction.message.substring(0, 80) + '...' : '',
                                 datetime: moment.utc(Math.ceil(logsAction.timestamp / 1000000)).format('HH:mm:ss.SSS, DD MMM YY'),
                             }
                         };

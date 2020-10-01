@@ -50,7 +50,7 @@ export class LogsActionEffects {
             timer(0, 1000).pipe(
                 takeUntil(logActionDestroy$),
                 switchMap(() =>
-                    this.http.get(state.settingsNode.api.debugger + '/v2/log/?limit=30').pipe(
+                    this.http.get(state.settingsNode.api.debugger + '/v2/log/?limit=100').pipe(
                         map(response => ({ type: 'LOGS_ACTION_START_SUCCESS', payload: response })),
                         catchError(error => of({ type: 'LOGS_ACTION_START_ERROR', payload: error })),
                     )
