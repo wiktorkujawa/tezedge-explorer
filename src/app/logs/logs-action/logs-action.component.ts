@@ -47,7 +47,7 @@ export class LogsActionComponent implements OnInit, OnDestroy {
         this.changeDetector.markForCheck();
         
         console.log('[logsAction] data', data);
-        console.error(this.logsActionlastCursorId, '<',  data.lastCursorId);
+        // console.error(this.logsActionlastCursorId, '<',  data.lastCursorId);
         if (this.logsActionlastCursorId < data.lastCursorId) {
             this.logsActionlastCursorId = data.lastCursorId;
           setTimeout(() => {

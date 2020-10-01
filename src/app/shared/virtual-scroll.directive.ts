@@ -27,6 +27,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     private prevScrollTop = 0;
 
     private viewportHeight = 0;
+    private viewportScrollHeight = 0;
 
     private cacheRequestIds = {};
     private cacheItemsIds = new Set();
@@ -114,8 +115,10 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             if(this.prevScrollTop != currentScrollTop){
                 console.log('[onScroll]');
 
-                // Emit scroll changed event
-                this.scrollChanged.emit();
+                // If scroll is not at the bottom (end) - emit scroll changed event
+                if(this.viewportScrollHeight - currentScrollTop > Math.ceil(this.viewportHeight)){
+                    this.scrollChanged.emit();
+                }
                 
                 // console.log('[onScroll] currentScrollTop=' + currentScrollTop + ' this.viewportHeight=' + this.viewportHeight);
 
@@ -126,7 +129,6 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                 end = Math.min(this.virtualScrollHeight / this.itemHeight, end);
                 // console.log('[onScroll] start=' + start + ' end=' + end
                     // + ' this.scrollPositionStart=' + this.scrollPositionStart + ' this.scrollPositionEnd=' + this.scrollPositionEnd);
-    
     
                 // get offset so we can set correct possition for items
                 this.virtualScrollItemsOffset = (this.vsForOf.lastCursorId - this.virtualScrollItemsCount);
@@ -200,6 +202,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         this.virtualScrollHeight = this.virtualScrollItemsCount * this.itemHeight;
         this.maxScrollHeight = this.maxScrollHeight > this.virtualScrollHeight ? this.virtualScrollHeight : this.maxScrollHeight;
         this.$scroller.style.height = `${this.maxScrollHeight}px`;
+        this.viewportScrollHeight = this.$viewport.scrollHeight;
 
         console.log('[load] this.virtualScrollHeight=' + this.virtualScrollHeight + ' this.maxScrollHeight=' + this.maxScrollHeight);
 
