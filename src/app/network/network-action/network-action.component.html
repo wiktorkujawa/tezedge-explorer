@@ -153,9 +153,9 @@
         <div class="virtual-scroll-footer">
             <div class="virtual-scroll-footer-container">
                 <div style="padding: 4px;">
-                    <!-- <button class="action-button latest" (click)="scrollToEnd()" mat-button>
+                    <button class="action-button small" (click)="scrollToEnd()" mat-button> 
                         <img class="icon" src="../../../assets/icon/arrow-to-bottom.svg" />
-                    </button> -->
+                    </button>
     
                     <button (click)="toggleStream(true)" [class.active]="virtualScrollItems?.stream" class="action-button live" mat-button> 
                         <img class="icon" src="../../../assets/icon/play-circle.svg" />
@@ -166,6 +166,24 @@
                         <img class="icon" src="../../../assets/icon/pause-circle.svg" />
                         PAUSED 
                     </button>
+
+                    <!-- Pagination -->
+                    <span style="margin-left: 16px;">
+                        <button class="action-button small" mat-button> 
+                            <img class="icon" src="../../../assets/icon/angle-left.svg" />
+                        </button>
+                        <button class="action-button small" mat-button> 
+                            <img class="icon" src="../../../assets/icon/angle-right.svg" />
+                        </button>
+
+                        <span style="margin-right: 8px;">
+                            16.04.2019 - 02.02.2020
+                        </span>
+
+                        <button class="action-button small" mat-button> 
+                            <img class="icon" src="../../../assets/icon/search.svg" />
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>

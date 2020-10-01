@@ -1726,11 +1726,10 @@ input.mat-input-element {
         // }
     }
     .virtual-scroll-container-detail {
-        align-items: flex-end;
         // width: 40%;
         flex: 1;
         overflow-y: overlay;
-        padding: 10px 10px 0px 20px;
+        padding: 8px 8px 0px 8px;
         border-left: 1px solid #333334;
     }
     .virtual-scroll-footer{
@@ -1754,13 +1753,24 @@ input.mat-input-element {
                 cursor: pointer;
                 margin: 0 2px;
 
-                &.live.active {
-                    background-color: $color-highlight-green;
+                &.live {
+                    color: fade-out($color-focus, 0.4);
+                    &.active{
+                        background-color: $color-highlight-green;
+                        color: $color-focus;
+                    }
                 }
-                &.paused.active {
-                    background-color: $color-highlight-red;
+                &.paused {
+                    color: fade-out($color-focus, 0.4);
+                    &.active{
+                        background-color: $color-highlight-red;
+                        color: $color-focus;
+                    }
                 }
-                &.latest{
+                &.small{
+                    min-width: 24px;
+                    margin: 0;
+                    margin-right: 8px;
                     background-color: fade-out($color-focus, 0.9);
                 }
 
