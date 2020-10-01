@@ -1728,7 +1728,7 @@ input.mat-input-element {
     .virtual-scroll-container-detail {
         align-items: flex-end;
         // width: 40%;
-        flex: 0 0 40%;
+        flex: 1;
         overflow-y: overlay;
         padding: 10px 10px 0px 20px;
         border-left: 1px solid #333334;

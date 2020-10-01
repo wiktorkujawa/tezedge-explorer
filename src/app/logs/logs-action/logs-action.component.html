@@ -25,7 +25,7 @@
             <span style="display: inline-block; min-width: 180px;">
                 DATETIME
             </span>
-            <span style="display: inline-block; min-width: 180px;">
+            <span style="display: inline-block; min-width: 100px;">
                 LEVEL
             </span>
             <span style="display: inline-block; min-width: 100px;">
@@ -36,13 +36,13 @@
         <div style="display:flex;flex-direction: row;">
             <div class="virtual-scroll-container">
                 <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="position"
-                    (getItems)="getItems($event)">
+                    (getItems)="getItems($event)" (scrollChanged)="onScroll()">
                     <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2"
                         (click)="clickedItem(event)" (mouseenter)="tableMouseEnter(event)" (mouseleave)="tableMouseLeave()" 
                         [class.selected]="event?.id === logsClickedItem?.id" [class.hovered]="event?.id && event?.id === logsActionItem?.id && logsActionItem?.id !== logsClickedItem?.id">
                         
                         <span style="display: inline-block; min-width: 180px;">{{event?.datetime}}</span>
-                        <span style="display: inline-block; min-width: 180px;">{{event?.level}}</span>
+                        <span style="display: inline-block; min-width: 100px;">{{event?.level}}</span>
                         <span style="display: inline-block; min-width: 180px; white-space: nowrap; text-overflow: ellipsis;font-size:14px !important;">{{event?.preview}}</span>
                     </span>
                 </ng-template>

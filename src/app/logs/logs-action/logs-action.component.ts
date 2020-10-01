@@ -56,8 +56,8 @@ export class LogsActionComponent implements OnInit, OnDestroy {
         }
   
         // show details for last item
-        if(!this.logsActionItem && data?.ids.length){
-          this.logsActionItem = data?.entities[data.entities.length-1];
+        if(!this.logsClickedItem && data && data.ids.length){
+          this.logsActionItem = data.entities[data.ids[data.ids.length-1]];
           this.logsClickedItem = this.logsActionItem;
         }
       });

@@ -116,6 +116,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                 console.log('[onScroll]');
 
                 // If scroll is not at the bottom (end) - emit scroll changed event
+                // console.error(this.viewportScrollHeight - currentScrollTop > Math.ceil(this.viewportHeight), this.viewportScrollHeight - currentScrollTop, Math.ceil(this.viewportHeight) )
                 if(this.viewportScrollHeight - currentScrollTop > Math.ceil(this.viewportHeight)){
                     this.scrollChanged.emit();
                 }
@@ -191,7 +192,6 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
         // set row height in virtual scroll
         console.log('[load] this.itemHeight=' + this.itemHeight);
-        this.itemHeight = 32;
 
         // get number of items in virtual scroll
         console.log('[load] vsForOf.lastCursorId=', this.vsForOf.lastCursorId);
