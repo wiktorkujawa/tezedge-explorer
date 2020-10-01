@@ -25,6 +25,9 @@ export class NetworkActionComponent implements OnInit {
   public networkActionlastCursorId = 0;
   public virtualScrollItems;
 
+  public latestDateInView;
+  public oldestDateInView;
+
   public onDestroy$ = new Subject();
 
   @ViewChild(CdkVirtualScrollViewport) viewPort: CdkVirtualScrollViewport;
@@ -73,10 +76,20 @@ export class NetworkActionComponent implements OnInit {
 
       }
 
-      // show details for last item
-      if(!this.networkClickedItem && data && data.ids.length){
-        this.networkActionItem = data.entities[data.ids[data.ids.length-1]];
-        this.networkClickedItem = this.networkActionItem;
+      if(data && data.ids.length){
+        const latestItem = data.entities[data.lastCursorId]
+        if(latestItem){
+          // show details for last item
+          if(!this.networkClickedItem && !this.networkActionItem){
+            this.networkActionItem = latestItem;
+            this.networkClickedItem = latestItem;
+          }
+  
+          // set latest date for pagination
+          console.log(latestItem.timestamp)
+          console.log(latestItem.datetime)
+          this.latestDateInView = latestItem.datetime;
+        }
       }
     });
 

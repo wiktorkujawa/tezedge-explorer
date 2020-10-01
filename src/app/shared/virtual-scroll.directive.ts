@@ -56,6 +56,10 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         console.log('[ngOnChanges]', changes);
         
         if (this.virtualScrollItemsCount > 0) {
+            // change offset if new item loaded (via live stream)
+            if(changes.vsForOf.currentValue.lastCursorId != changes.vsForOf.previousValue.lastCursorId){
+                this.virtualScrollItemsOffset = (this.vsForOf.lastCursorId - this.virtualScrollItemsCount);
+            }
             this.renderViewportItems();
         }
     }

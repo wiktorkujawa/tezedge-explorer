@@ -21,6 +21,9 @@ export class LogsActionComponent implements OnInit, OnDestroy {
   public logsActionlastCursorId = 0;
   public virtualScrollItems;
 
+  public latestDateInView;
+  public oldestDateInView;
+
   public onDestroy$ = new Subject();
 
   @ViewChild(CdkVirtualScrollViewport) viewPort: CdkVirtualScrollViewport;
@@ -55,10 +58,20 @@ export class LogsActionComponent implements OnInit, OnDestroy {
           });
         }
   
-        // show details for last item
-        if(!this.logsClickedItem && data && data.ids.length){
-          this.logsActionItem = data.entities[data.ids[data.ids.length-1]];
-          this.logsClickedItem = this.logsActionItem;
+        if(data && data.ids.length){
+          const latestItem = data.entities[data.lastCursorId]
+          if(latestItem){
+            // show details for last item
+            if(!this.logsClickedItem && !this.logsActionItem){
+              this.logsActionItem = latestItem;
+              this.logsClickedItem = latestItem;
+            }
+    
+            // set latest date for pagination
+            console.log(latestItem.timestamp)
+            console.log(latestItem.datetime)
+            this.latestDateInView = latestItem.datetime;
+          }
         }
       });
   }
