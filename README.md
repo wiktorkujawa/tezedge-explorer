@@ -83,4 +83,3 @@ Run `npm run server:json` for a json dev server.
 Navigate to `http://localhost:3000/`.
 
 Please view/edit `db.json` file according to your needs.
-
