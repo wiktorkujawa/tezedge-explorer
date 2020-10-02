@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChil
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import * as moment from 'moment-mini-ts';
 
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
@@ -87,7 +88,23 @@ export class NetworkActionComponent implements OnInit {
   
           if(!this.latestDateInView){
             // set latest date for pagination
-            this.latestDateInView = new Date(Date.parse(latestItem.datetime.split(',')[1]));  
+            this.latestDateInView = moment.utc(Math.ceil(latestItem.timestamp / 1000000)).format('DD.MM.YYYY');
+          }
+          if(!this.oldestDateInView){
+            // get oldest date for pagination
+            if(data.oldestItemInView){
+              this.oldestDateInView = moment.utc(Math.ceil(data.oldestItemInView.timestamp / 1000000)).format('DD.MM.YYYY')
+            } else {       
+              // dispatch action to get oldest item
+              if(this.vrFor.lastItemInView){
+                this.store.dispatch({
+                  type: 'NETWORK_ACTION_GET_BY_ID',
+                  payload: {
+                    cursor_id: this.vrFor.lastItemInView
+                  },
+                });
+              }
+            }
           }
         }
       }

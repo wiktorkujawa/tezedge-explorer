@@ -151,6 +151,14 @@ export function reducer(state = initialState, action) {
                 filter: stateFilter,
             };
         }
+        
+        // get network item by id
+        case 'NETWORK_ACTION_GET_BY_ID_SUCCESS': {
+            return {
+                ...state,
+                oldestItemInView: action.payload[0],
+            }
+        }
 
         default:
             return state;

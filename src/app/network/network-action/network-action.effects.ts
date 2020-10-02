@@ -105,7 +105,34 @@ export class NetworkActionEffects {
             return caught;
         })
 
-    )
+    );
+
+    @Effect()
+    NetworkActionGetById$ = this.actions$.pipe(
+        ofType('NETWORK_ACTION_GET_BY_ID'),
+
+        // merge state
+        withLatestFrom(this.store, (action: any, state) => ({ action, state })),
+
+        switchMap(({ action, state }) => {
+            return this.http.get(
+                state.settingsNode.api.debugger +
+                '/v2/p2p/?cursor_id=' + action.payload.cursor_id + '&limit=1'
+            );
+        }),
+
+        // dispatch action
+        map((payload) => ({ type: 'NETWORK_ACTION_GET_BY_ID_SUCCESS', payload: payload })),
+        catchError((error, caught) => {
+            console.error(error);
+            this.store.dispatch({
+                type: 'NETWORK_ACTION_GET_BY_ID_ERROR',
+                payload: error,
+            });
+            return caught;
+        })
+
+    );
 
     constructor(
         private http: HttpClient,

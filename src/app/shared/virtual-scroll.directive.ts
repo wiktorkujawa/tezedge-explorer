@@ -28,6 +28,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
     private viewportHeight = 0;
     private viewportScrollHeight = 0;
+    public lastItemInView;
 
     private cacheRequestIds = {};
     private cacheItemsIds = new Set();
@@ -207,6 +208,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         this.maxScrollHeight = this.maxScrollHeight > this.virtualScrollHeight ? this.virtualScrollHeight : this.maxScrollHeight;
         this.$scroller.style.height = `${this.maxScrollHeight}px`;
         this.viewportScrollHeight = this.$viewport.scrollHeight;
+
+        this.lastItemInView = this.vsForOf.lastCursorId - this.virtualScrollItemsCount;
 
         console.log('[load] this.virtualScrollHeight=' + this.virtualScrollHeight + ' this.maxScrollHeight=' + this.maxScrollHeight);
 

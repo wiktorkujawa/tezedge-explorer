@@ -102,12 +102,12 @@
                         [class.selected]="event?.id === networkClickedItem?.id" [class.hovered]="event?.id && event?.id === networkActionItem?.id && networkActionItem?.id !== networkClickedItem?.id">
 
                         <!-- For debug only TODO: remove later -->
-                        <!-- <span style="display: inline-block; min-width: 180px;">
+                        <span style="display: inline-block; min-width: 180px;">
                             {{ event.index }}
                         </span>
                         <span *ngIf="!event?.datetime" style="display: inline-block; min-width: 180px;">
                             Loading...
-                        </span> -->
+                        </span>
                         <!-- <span style="display: inline-block; min-width: 180px;">
                             {{ event.id }}
                         </span> -->
@@ -153,7 +153,7 @@
         <div class="virtual-scroll-footer">
             <div class="virtual-scroll-footer-container">
                 <div style="padding: 4px;">
-                    <button class="action-button small" (click)="scrollToEnd()" mat-button> 
+                    <button class="action-button small" matTooltip="Show latest" (click)="scrollToEnd()" mat-button> 
                         <img class="icon" src="../../../assets/icon/arrow-to-bottom.svg" />
                     </button>
     
@@ -177,7 +177,7 @@
                         </button>
 
                         <span style="margin-right: 8px;">
-                            {{'16.04.2019' + ' - ' + (latestDateInView ? (latestDateInView | date: 'dd.MM.yyyy') : '')}}
+                            {{(oldestDateInView ? oldestDateInView : '') + ' - ' + (latestDateInView ? latestDateInView : '')}}
                         </span>
 
                         <button class="action-button small" mat-button> 

@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import * as moment from 'moment-mini-ts';
 
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
@@ -68,7 +69,7 @@ export class LogsActionComponent implements OnInit, OnDestroy {
             }
     
             // set latest date for pagination
-            this.latestDateInView = new Date(Date.parse(latestItem.datetime.split(',')[1]));
+            this.latestDateInView = moment.utc(Math.ceil(latestItem.timestamp / 1000000)).format('DD.MM.YYYY')
           }
         }
       });
