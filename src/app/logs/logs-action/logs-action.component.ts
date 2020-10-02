@@ -68,9 +68,7 @@ export class LogsActionComponent implements OnInit, OnDestroy {
             }
     
             // set latest date for pagination
-            console.log(latestItem.timestamp)
-            console.log(latestItem.datetime)
-            this.latestDateInView = latestItem.datetime;
+            this.latestDateInView = new Date(Date.parse(latestItem.datetime.split(',')[1]));
           }
         }
       });

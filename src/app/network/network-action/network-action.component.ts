@@ -85,10 +85,10 @@ export class NetworkActionComponent implements OnInit {
             this.networkClickedItem = latestItem;
           }
   
-          // set latest date for pagination
-          console.log(latestItem.timestamp)
-          console.log(latestItem.datetime)
-          this.latestDateInView = latestItem.datetime;
+          if(!this.latestDateInView){
+            // set latest date for pagination
+            this.latestDateInView = new Date(Date.parse(latestItem.datetime.split(',')[1]));  
+          }
         }
       }
     });

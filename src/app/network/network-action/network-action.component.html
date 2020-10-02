@@ -177,7 +177,7 @@
                         </button>
 
                         <span style="margin-right: 8px;">
-                            {{'16.04.2019' + '-' + (latestDateInView)}}
+                            {{'16.04.2019' + ' - ' + (latestDateInView ? (latestDateInView | date: 'dd.MM.yyyy') : '')}}
                         </span>
 
                         <button class="action-button small" mat-button> 
