@@ -222,6 +222,9 @@ export class NetworkActionComponent implements OnInit {
 
     this.store.dispatch({
       type: 'NETWORK_ACTION_NEXT_PAGE',
+      payload: {
+        cursor_id: this.virtualScrollItems.lastCursorId + this.vrFor.virtualScrollItemsCount,
+      }
     });
 
     this.vrFor.scrollToBottom();

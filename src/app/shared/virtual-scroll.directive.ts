@@ -21,7 +21,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
     private virtualScrollHeight = 0;
 
-    private virtualScrollItemsCount = 0;
+    public virtualScrollItemsCount = 0;
     public virtualScrollItemsOffset = 0;
 
     private prevScrollTop = 0;

@@ -172,7 +172,7 @@ export function reducer(state = initialState, action) {
         case 'NETWORK_ACTION_NEXT_PAGE': {
             return {
                 ...state,
-                lastCursorId: state.oldestItemInView.id,
+                lastCursorId: action.payload.cursor_id,
                 oldestItemInView: null,
             }
         }
