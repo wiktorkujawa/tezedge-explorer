@@ -102,7 +102,7 @@
                         [class.selected]="event?.id === networkClickedItem?.id" [class.hovered]="event?.id && event?.id === networkActionItem?.id && networkActionItem?.id !== networkClickedItem?.id">
 
                         <!-- For debug only TODO: remove later -->
-                        <span style="display: inline-block; min-width: 180px;">
+                        <span style="display: inline-block; min-width: 80px;">
                             {{ event.index }}
                         </span>
                         <span *ngIf="!event?.datetime" style="display: inline-block; min-width: 180px;">
@@ -169,10 +169,10 @@
 
                     <!-- Pagination -->
                     <span style="margin-left: 16px;">
-                        <button class="action-button small" mat-button> 
+                        <button class="action-button small" (click)="previousPage()" mat-button> 
                             <img class="icon" src="../../../assets/icon/angle-left.svg" />
                         </button>
-                        <button class="action-button small" mat-button> 
+                        <button class="action-button small" (click)="nextPage()" mat-button> 
                             <img class="icon" src="../../../assets/icon/angle-right.svg" />
                         </button>
 

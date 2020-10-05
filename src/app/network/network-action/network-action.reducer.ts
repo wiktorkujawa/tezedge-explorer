@@ -25,6 +25,7 @@ const initialState: any = {
     },
     stream: false,
     urlParams: '',
+    oldestItemInView: null,
 };
 
 export function reducer(state = initialState, action) {
@@ -153,10 +154,26 @@ export function reducer(state = initialState, action) {
         }
         
         // get network item by id
-        case 'NETWORK_ACTION_GET_BY_ID_SUCCESS': {
+        case 'NETWORK_ACTION_GET_OLDEST_ITEM_SUCCESS': {
             return {
                 ...state,
                 oldestItemInView: action.payload[0],
+            }
+        }
+
+        case 'NETWORK_ACTION_PREVIOUS_PAGE': {
+            return {
+                ...state,
+                lastCursorId: state.oldestItemInView.id,
+                oldestItemInView: null,
+            }
+        }
+
+        case 'NETWORK_ACTION_NEXT_PAGE': {
+            return {
+                ...state,
+                lastCursorId: state.oldestItemInView.id,
+                oldestItemInView: null,
             }
         }
 

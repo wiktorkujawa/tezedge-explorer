@@ -109,7 +109,7 @@ export class NetworkActionEffects {
 
     @Effect()
     NetworkActionGetById$ = this.actions$.pipe(
-        ofType('NETWORK_ACTION_GET_BY_ID'),
+        ofType('NETWORK_ACTION_GET_OLDEST_ITEM'),
 
         // merge state
         withLatestFrom(this.store, (action: any, state) => ({ action, state })),
@@ -122,11 +122,11 @@ export class NetworkActionEffects {
         }),
 
         // dispatch action
-        map((payload) => ({ type: 'NETWORK_ACTION_GET_BY_ID_SUCCESS', payload: payload })),
+        map((payload) => ({ type: 'NETWORK_ACTION_GET_OLDEST_ITEM_SUCCESS', payload: payload })),
         catchError((error, caught) => {
             console.error(error);
             this.store.dispatch({
-                type: 'NETWORK_ACTION_GET_BY_ID_ERROR',
+                type: 'NETWORK_ACTION_GET_OLDEST_ITEM_ERROR',
                 payload: error,
             });
             return caught;

@@ -78,9 +78,9 @@ export class NetworkActionComponent implements OnInit {
       }
 
       if(data && data.ids.length){
-        const latestItem = data.entities[data.lastCursorId]
+        const latestItem = data.entities[data.lastCursorId-1]
         if(latestItem){
-          // show details for last item
+          // show details for last item (if none already selected)
           if(!this.networkClickedItem && !this.networkActionItem){
             this.networkActionItem = latestItem;
             this.networkClickedItem = latestItem;
@@ -90,17 +90,18 @@ export class NetworkActionComponent implements OnInit {
             // set latest date for pagination
             this.latestDateInView = moment.utc(Math.ceil(latestItem.timestamp / 1000000)).format('DD.MM.YYYY');
           }
+
           if(!this.oldestDateInView){
             // get oldest date for pagination
             if(data.oldestItemInView){
               this.oldestDateInView = moment.utc(Math.ceil(data.oldestItemInView.timestamp / 1000000)).format('DD.MM.YYYY')
             } else {       
               // dispatch action to get oldest item
-              if(this.vrFor.lastItemInView){
+              if(this.vrFor.virtualScrollItemsOffset){
                 this.store.dispatch({
-                  type: 'NETWORK_ACTION_GET_BY_ID',
+                  type: 'NETWORK_ACTION_GET_OLDEST_ITEM',
                   payload: {
-                    cursor_id: this.vrFor.lastItemInView
+                    cursor_id: this.vrFor.virtualScrollItemsOffset
                   },
                 });
               }
@@ -204,10 +205,27 @@ export class NetworkActionComponent implements OnInit {
     });
   }
 
-  // scrollToEnd() {
-  //   const offset = this.ITEM_SIZE * this.networkActionList.length;
-  //   this.viewPort.scrollToOffset(offset);
-  // }
+  previousPage(){
+    this.latestDateInView = null;
+    this.oldestDateInView = null;
+
+    this.store.dispatch({
+      type: 'NETWORK_ACTION_PREVIOUS_PAGE',
+    });
+
+    this.vrFor.scrollToBottom();
+  }
+
+  nextPage(){
+    this.latestDateInView = null;
+    this.oldestDateInView = null;
+
+    this.store.dispatch({
+      type: 'NETWORK_ACTION_NEXT_PAGE',
+    });
+
+    this.vrFor.scrollToBottom();
+  }
 
   ngOnDestroy() {
     console.log('[network-action][onDestroy]');
