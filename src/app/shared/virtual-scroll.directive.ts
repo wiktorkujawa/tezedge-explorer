@@ -24,7 +24,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     public virtualScrollItemsCount = 0;
     public virtualScrollItemsOffset = 0;
 
-    private prevScrollTop = 0;
+    public prevScrollTop = 0;
 
     private viewportHeight = 0;
     private viewportScrollHeight = 0;
@@ -103,12 +103,11 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
         // set scroll to latest item in list
         this.$viewport.scrollTop = this.virtualScrollItemsCount * this.itemHeight;
-
+        this.prevScrollTop = 0;
     }
 
 
-    onScroll() {
-
+    onScroll() {        
         // update virtual scroll before next repaint
         // window.requestAnimationFrame(() => {
         // this.ngZone.runOutsideAngular(() => {
@@ -192,7 +191,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         console.log('[load]');
 
         // TODO: should we clear on load?
-        // this.clear();
+        this.clear();
 
         // set row height in virtual scroll
         console.log('[load] this.itemHeight=' + this.itemHeight);

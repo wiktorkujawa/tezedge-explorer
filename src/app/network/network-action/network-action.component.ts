@@ -85,29 +85,8 @@ export class NetworkActionComponent implements OnInit {
             this.networkActionItem = latestItem;
             this.networkClickedItem = latestItem;
           }
-  
-          if(!this.latestDateInView){
-            // set latest date for pagination
-            this.latestDateInView = moment.utc(Math.ceil(latestItem.timestamp / 1000000)).format('DD.MM.YYYY');
-          }
-
-          if(!this.oldestDateInView){
-            // get oldest date for pagination
-            if(data.oldestItemInView){
-              this.oldestDateInView = moment.utc(Math.ceil(data.oldestItemInView.timestamp / 1000000)).format('DD.MM.YYYY')
-            } else {       
-              // dispatch action to get oldest item
-              if(this.vrFor.virtualScrollItemsOffset){
-                this.store.dispatch({
-                  type: 'NETWORK_ACTION_GET_OLDEST_ITEM',
-                  payload: {
-                    cursor_id: this.vrFor.virtualScrollItemsOffset
-                  },
-                });
-              }
-            }
-          }
         }
+        this.setDatesForPagination();
       }
     });
 
@@ -206,17 +185,27 @@ export class NetworkActionComponent implements OnInit {
   }
 
   previousPage(){
+    if (this.virtualScrollItems.stream) {
+      this.stopStream();
+    }
     this.latestDateInView = null;
     this.oldestDateInView = null;
 
     this.store.dispatch({
       type: 'NETWORK_ACTION_PREVIOUS_PAGE',
+      payload: {
+        cursor_id: this.vrFor.virtualScrollItemsOffset,
+      }
     });
 
     this.vrFor.scrollToBottom();
+    this.setDatesForPagination();
   }
 
-  nextPage(){
+  nextPage(){    
+    if (this.virtualScrollItems.stream) {
+      this.stopStream();
+    }
     this.latestDateInView = null;
     this.oldestDateInView = null;
 
@@ -228,6 +217,39 @@ export class NetworkActionComponent implements OnInit {
     });
 
     this.vrFor.scrollToBottom();
+    this.setDatesForPagination();
+  }
+
+  setDatesForPagination(){
+    console.error("SET DATES");
+    console.log(this.latestDateInView);
+    console.log(this.oldestDateInView);
+    const latestItem = this.virtualScrollItems.entities[this.virtualScrollItems.lastCursorId-1]
+
+    if(!this.latestDateInView && latestItem){
+      // set latest date for pagination
+      this.latestDateInView = moment.utc(Math.ceil(latestItem.timestamp / 1000000)).format('DD.MM.YYYY');
+    }
+
+    if(!this.oldestDateInView){
+      // get oldest date for pagination
+      if(this.virtualScrollItems.oldestItemInView){
+        this.oldestDateInView = moment.utc(Math.ceil(this.virtualScrollItems.oldestItemInView.timestamp / 1000000)).format('DD.MM.YYYY');
+      } else {       
+        // dispatch action to get oldest item
+        if(this.vrFor.virtualScrollItemsOffset){
+          this.store.dispatch({
+            type: 'NETWORK_ACTION_GET_OLDEST_ITEM',
+            payload: {
+              cursor_id: this.vrFor.virtualScrollItemsOffset
+            },
+          });
+        }
+      }
+    }
+
+    console.log(this.latestDateInView);
+    console.log(this.oldestDateInView);
   }
 
   ngOnDestroy() {
