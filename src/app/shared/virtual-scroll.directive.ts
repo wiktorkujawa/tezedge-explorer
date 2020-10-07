@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { of, fromEvent, Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
+import * as fastdom from 'fastdom';
 
 // tslint:disable-next-line: no-conflicting-lifecycle
 @Directive({
@@ -236,9 +237,17 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         const requestPositionOffset = this.getRequestPositionOffset();
         this.cacheRequestIds[requestPositionOffset] = true;
 
+        // defined for fastdom (remove)
+        // const embedViews = this.embeddedViews;
+        // const iteHeight = this.itemHeight;
+        // const scrollPosStart = this.scrollPositionStart;
+        // const scrollPositionEnd = this.scrollPositionEnd;
+        // const cacheItemEntities = this.cacheItemsEntities;
+
         // loop through embedded views and change their contents
         for (let index = 0; index < this.embeddedViews.length; index++) {
             const virutalScrollPosition = this.virtualScrollItemsOffset + index + this.scrollPositionStart;
+            const ind = index;
 
             // cache value
             if (this.vsForOf.entities.hasOwnProperty(virutalScrollPosition) && !this.cacheItemsIds.has(virutalScrollPosition)) {
@@ -270,8 +279,22 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                 // ...this.vsForOf.entities[virutalScrollPosition]
                 ...this.cacheItemsEntities[virutalScrollPosition],
             };
+            // view.markForCheck();
 
-            view.markForCheck();
+            // fastdom.mutate(function() {
+                // change view content
+                // const view = embedViews[ind];
+                // view.context.position = (ind + scrollPosStart) * iteHeight;
+                // view.context.start = scrollPosStart;
+                // view.context.end = scrollPositionEnd;
+                // view.context.index = ind + scrollPosStart;
+                // view.context.$implicit = {
+                //     index: virutalScrollPosition,
+                //     // ...this.vsForOf.entities[virutalScrollPosition]
+                //     ...cacheItemEntities[virutalScrollPosition],
+                // };
+                // view.markForCheck();
+            // });
         }
         // })
         // });
