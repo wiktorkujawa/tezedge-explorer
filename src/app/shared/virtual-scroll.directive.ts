@@ -237,7 +237,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         const requestPositionOffset = this.getRequestPositionOffset();
         this.cacheRequestIds[requestPositionOffset] = true;
 
-        // defined for fastdom (remove)
+        // // defined for fastdom (remove)
         // const embedViews = this.embeddedViews;
         // const iteHeight = this.itemHeight;
         // const scrollPosStart = this.scrollPositionStart;
@@ -282,20 +282,22 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             // view.markForCheck();
 
             // fastdom.mutate(function() {
-                // change view content
-                // const view = embedViews[ind];
-                // view.context.position = (ind + scrollPosStart) * iteHeight;
-                // view.context.start = scrollPosStart;
-                // view.context.end = scrollPositionEnd;
-                // view.context.index = ind + scrollPosStart;
-                // view.context.$implicit = {
-                //     index: virutalScrollPosition,
-                //     // ...this.vsForOf.entities[virutalScrollPosition]
-                //     ...cacheItemEntities[virutalScrollPosition],
-                // };
-                // view.markForCheck();
+            //     //change view content
+            //     console.log('MUTATE: ', ind + scrollPosStart);
+            //     const view = embedViews[ind];
+            //     view.context.position = (ind + scrollPosStart) * iteHeight;
+            //     view.context.start = scrollPosStart;
+            //     view.context.end = scrollPositionEnd;
+            //     view.context.index = ind + scrollPosStart;
+            //     view.context.$implicit = {
+            //         index: virutalScrollPosition,
+            //         // ...this.vsForOf.entities[virutalScrollPosition]
+            //         ...cacheItemEntities[virutalScrollPosition],
+            //     };
+            //     view.markForCheck();
             // });
         }
+        console.log('LOOP FINISHED');
         // })
         // });
     }

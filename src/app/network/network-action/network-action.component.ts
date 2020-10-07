@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import * as moment from 'moment-mini-ts';
 
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { VirtualScrollDirective } from 'src/app/shared/virtual-scroll.directive';
@@ -25,6 +25,7 @@ export class NetworkActionComponent implements OnInit {
   public networkClickedItem;
   public networkActionlastCursorId = 0;
   public virtualScrollItems;
+  public virtualScrollItems$: Observable<any>;
 
   public latestDateInView;
   public oldestDateInView;
@@ -55,12 +56,14 @@ export class NetworkActionComponent implements OnInit {
         });
       });
 
+    this.virtualScrollItems$ = this.store.select('networkAction');
+
     // wait for data changes from redux
     this.store.select('networkAction')
     .pipe(takeUntil(this.onDestroy$))
     .subscribe(data => {
       this.virtualScrollItems = data;
-      this.changeDetector.markForCheck();
+      // this.changeDetector.markForCheck();
 
       console.log('[networkAction] data', data);
       // console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
