@@ -1707,6 +1707,7 @@ input.mat-input-element {
             font-size: 12px;
             padding-left: 16px;
             color: white;
+            will-change: transform;
     
             &.virtualScrollRowEven {
                 background-color: #323334;
