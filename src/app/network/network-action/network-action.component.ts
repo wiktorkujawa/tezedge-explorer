@@ -25,7 +25,7 @@ export class NetworkActionComponent implements OnInit {
   public networkClickedItem;
   public networkActionlastCursorId = 0;
   public virtualScrollItems;
-  public virtualScrollItems$: Observable<any>;
+  // public virtualScrollItems$: Observable<any>;
 
   public latestDateInView;
   public oldestDateInView;
@@ -56,14 +56,14 @@ export class NetworkActionComponent implements OnInit {
         });
       });
 
-    this.virtualScrollItems$ = this.store.select('networkAction');
+    // this.virtualScrollItems$ = this.store.select('networkAction');
 
     // wait for data changes from redux
     this.store.select('networkAction')
     .pipe(takeUntil(this.onDestroy$))
     .subscribe(data => {
       this.virtualScrollItems = data;
-      // this.changeDetector.markForCheck();
+      this.changeDetector.markForCheck();
 
       console.log('[networkAction] data', data);
       // console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
@@ -224,9 +224,6 @@ export class NetworkActionComponent implements OnInit {
   }
 
   setDatesForPagination(){
-    console.error("SET DATES");
-    console.log(this.latestDateInView);
-    console.log(this.oldestDateInView);
     const latestItem = this.virtualScrollItems.entities[this.virtualScrollItems.lastCursorId-1]
 
     if(!this.latestDateInView && latestItem){
@@ -250,9 +247,6 @@ export class NetworkActionComponent implements OnInit {
         }
       }
     }
-
-    console.log(this.latestDateInView);
-    console.log(this.oldestDateInView);
   }
 
   ngOnDestroy() {

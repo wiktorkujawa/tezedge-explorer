@@ -297,31 +297,9 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             //     view.markForCheck();
             // });
         }
-        console.log('LOOP FINISHED');
         // })
         // });
     }
-
-    // Renders blank rows while content is loading
-    // private renderBlankViewportItems(){
-
-    //     this.ngZone.runOutsideAngular(() => {
-    //         // requestAnimationFrame(() => {
-    //             console.warn('[renderBlankViewportItems]');
-    //             for (let index = 0; index < this.embeddedViews.length; index++) {
-    //                 const virutalScrollPosition = this.virtualScrollItemsOffset + index + this.scrollPositionStart;
-    //                 // change view content
-    //                 const view = this.embeddedViews[index];
-    //                 view.context.position = (index + this.scrollPositionStart) * this.itemHeight;
-    //                 view.context.start = this.scrollPositionStart;
-    //                 view.context.end = this.scrollPositionEnd;
-    //                 view.context.index = index + this.scrollPositionStart;
-    //                 view.context.$implicit = { index: virutalScrollPosition };
-    //                 view.markForCheck();
-    //             }
-    //         // })
-    //     });
-    // }
 
     // get useable scroll size, so we can stack multiple pages for very large list
     // https://stackoverflow.com/questions/34931732/height-limitations-for-browser-vertical-scroll-bar
