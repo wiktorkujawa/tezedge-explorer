@@ -279,7 +279,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                 // ...this.vsForOf.entities[virutalScrollPosition]
                 ...this.cacheItemsEntities[virutalScrollPosition],
             };
-            // view.markForCheck();
+            view.markForCheck();
 
             // fastdom.mutate(function() {
             //     //change view content
