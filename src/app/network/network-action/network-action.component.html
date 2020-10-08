@@ -123,6 +123,7 @@
                         </span>
                         <span style="display: inline-block; min-width: 100px; color: #ffffffcc">
                             <span *ngIf="event?.source_type==='local'">
+                            <!-- <span *ngIf="event?.source_type==='local'">
                                 <svg-icon icon="local"></svg-icon>
                                 <svg-icon *ngIf="!event?.incoming" icon="arrow-right"></svg-icon>
                                 <svg-icon *ngIf="event?.incoming" icon="arrow-left"></svg-icon>
@@ -133,7 +134,7 @@
                                 <svg-icon *ngIf="event?.incoming" icon="arrow-right"></svg-icon>
                                 <svg-icon *ngIf="!event?.incoming" icon="arrow-left"></svg-icon>
                                 <svg-icon icon="local"></svg-icon>
-                            </span>
+                            </span> -->
                         </span>
                         <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
                             {{ event?.category }}<span *ngIf="event?.kind"> | {{ event?.kind }}</span>
