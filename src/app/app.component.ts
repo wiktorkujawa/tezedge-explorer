@@ -30,8 +30,21 @@ export class AppComponent {
   constructor(
     public store: Store<any>,
     public router: Router,
-    public zone: NgZone
+    public zone: NgZone,
+    // applicationRef: ApplicationRef,
   ) {
+
+    // For measuring change detection per component
+    // const originalTick = applicationRef.tick;
+    // applicationRef.tick = function() {
+    //   const windowPerfomance = window.performance;
+    //   const  before = windowPerfomance.now();
+    //   const retValue = originalTick.apply(this, arguments);
+    //   const after = windowPerfomance.now();
+    //   const runTime = after - before;
+    //   window.console.log('CHANGE DETECTION TIME' , runTime);
+    //   return retValue;
+    // };
 
     // get inner windows width
     this.innerWidth = window.innerWidth;
