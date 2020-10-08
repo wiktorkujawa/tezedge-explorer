@@ -78,7 +78,7 @@
         </div> -->
         
         <div class="virtual-scroll-header">
-            <span style="display: inline-block; min-width: 180px;">
+            <span class="column-header mw-100">
                 DATETIME
             </span>
             <span style="display: inline-block; min-width: 180px;">
@@ -98,31 +98,29 @@
                 <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="position"
                     (getItems)="getItems($event)" (scrollChanged)="onScroll()">
                     <span class="item" [style.transform]="'translate(0px,' + position + 'px)'" [class.virtualScrollRowEven]="event.index % 2"
-                        (click)="clickedItem(event)" 
+                        (click)="clickedItem(event)" (mouseenter)="tableMouseEnter(event)" (mouseleave)="tableMouseLeave()"
                         [class.selected]="event?.id === networkClickedItem?.id" [class.hovered]="event?.id && event?.id === networkActionItem?.id && networkActionItem?.id !== networkClickedItem?.id">
-
                         <!-- For debug only TODO: remove later -->
-                        <span style="display: inline-block; min-width: 80px;">
+                        <span class="item-column mw-80">
                             {{ event.index }}
                         </span>
-                        <span *ngIf="!event?.datetime" style="display: inline-block; min-width: 180px;">
+                        <span *ngIf="!event?.datetime" class="item-column mw-180">
                             Loading...
                         </span>
                         <!-- <span style="display: inline-block; min-width: 180px;">
                             {{ event.id }}
                         </span> -->
                         
-                        <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
+                        <span class="item-column mw-180">
                             {{ event?.datetime }}
                         </span>
-                        <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
+                        <span class="item-column mw-180">
                             <!-- TODO: do we need the link to network on network?? -->
                             <!-- <a style="color: #ffffffcc; text-decoration:none;" href="#/network/{{ event?.remote_addr }}">
                                 {{ event?.remote_addr }}</a> -->
                             {{ event?.remote_addr }}
                         </span>
-                        <span style="display: inline-block; min-width: 100px; color: #ffffffcc">
-                            <span *ngIf="event?.source_type==='local'">
+                        <span class="item-column mw-100">
                             <!-- <span *ngIf="event?.source_type==='local'">
                                 <svg-icon icon="local"></svg-icon>
                                 <svg-icon *ngIf="!event?.incoming" icon="arrow-right"></svg-icon>
@@ -136,7 +134,7 @@
                                 <svg-icon icon="local"></svg-icon>
                             </span> -->
                         </span>
-                        <span style="display: inline-block; min-width: 180px; color: #ffffffcc">
+                        <span class="item-column mw-180">
                             {{ event?.category }}<span *ngIf="event?.kind"> | {{ event?.kind }}</span>
                         </span>
                     </span>
@@ -153,7 +151,7 @@
 
         <div class="virtual-scroll-footer">
             <div class="virtual-scroll-footer-container">
-                <div style="padding: 4px;">
+                <div class="footer-wrap">
                     <button class="action-button small" matTooltip="Show latest" (click)="scrollToEnd()" mat-button> 
                         <img class="icon" src="../../../assets/icon/arrow-to-bottom.svg" />
                     </button>
@@ -169,7 +167,7 @@
                     </button>
 
                     <!-- Pagination -->
-                    <span style="margin-left: 16px;">
+                    <span class="pagination-wrap">
                         <button class="action-button small" (click)="previousPage()" mat-button> 
                             <img class="icon" src="../../../assets/icon/angle-left.svg" />
                         </button>
@@ -177,7 +175,7 @@
                             <img class="icon" src="../../../assets/icon/angle-right.svg" />
                         </button>
 
-                        <span style="margin-right: 8px;">
+                        <span class="date-range">
                             {{(oldestDateInView ? oldestDateInView : '') + ' - ' + (latestDateInView ? latestDateInView : '')}}
                         </span>
 

@@ -1719,12 +1719,30 @@ input.mat-input-element {
             &.hovered {
                 background-color: #a4a4a540; //fade-out($color-focus, 0.8);
             }
+
+            .item-column{
+                display: inline-block; 
+                color: #ffffffcc;
+            }
+            .item-column-header{
+                display: inline-block; 
+                color: #ffffffcc;
+            }
         }
     
         // .item:hover {
         //     background-color: #8C6141;
         //     /* #204E8A; */
         // }
+    }
+    .mw-80{
+        min-width: 80px;
+    }
+    .mw-100{
+        min-width: 100px;
+    }
+    .mw-180{
+        min-width: 180px;
     }
     .virtual-scroll-container-detail {
         // width: 40%;
@@ -1744,6 +1762,17 @@ input.mat-input-element {
             height: 100%;
             border-radius: 4px;
             background-color: #323334;
+
+            .footer-wrap{
+                padding: 4px;   
+            }
+            .pagination-wrap{
+                margin-left: 16px;
+
+                .date-range{
+                    margin-right: 8px;
+                }
+            }
 
             .action-button{
                 color: $color-focus;
