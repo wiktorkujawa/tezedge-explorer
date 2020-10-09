@@ -26,8 +26,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     public virtualScrollItemsOffset = 0;
 
     public prevScrollTop = 0;
-    private hoverTimer;
-    private scrollContainer;
+    // private hoverTimer;
+    // private scrollContainer;
 
     private viewportHeight = 0;
     private viewportScrollHeight = 0;
@@ -94,7 +94,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         this.scrollListener = this.renderer.listen(this.$viewport, 'scroll', this.onScroll.bind(this));
 
         // console.log('[ngAfterViewInit] this.maxScrollHeight=' + this.maxScrollHeight + ' this.viewportHeight=' + this.viewportHeight);
-        this.scrollContainer = this.element.nativeElement.parentElement;
+        
+        // this.scrollContainer = this.element.nativeElement.parentElement;
 
     }
 
@@ -169,16 +170,16 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                         });
                     }
 
-                    // disable hover events while scrolling to improve performance
-                    clearTimeout(this.hoverTimer);
-                    if(!this.vsForOf.stream && this.scrollContainer){
-                        if(!this.scrollContainer.classList.contains('disable-hover')){
-                            this.renderer.addClass(this.scrollContainer, 'disable-hover');
-                        }
-                        this.hoverTimer = setTimeout(() => {
-                            this.renderer.removeClass(this.scrollContainer, 'disable-hover');
-                        }, 300);
-                    }
+                    // // disable hover events while scrolling to improve performance
+                    // clearTimeout(this.hoverTimer);
+                    // if(!this.vsForOf.stream && this.scrollContainer){
+                    //     if(!this.scrollContainer.classList.contains('disable-hover')){
+                    //         this.renderer.addClass(this.scrollContainer, 'disable-hover');
+                    //     }
+                    //     this.hoverTimer = setTimeout(() => {
+                    //         this.renderer.removeClass(this.scrollContainer, 'disable-hover');
+                    //     }, 300);
+                    // }
 
                     // render items
                     this.renderViewportItems();
