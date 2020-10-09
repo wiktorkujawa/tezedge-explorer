@@ -1694,6 +1694,10 @@ input.mat-input-element {
         /* height: 500px; */
         overflow: auto;
         z-index: 999;
+
+        &.disable-hover{
+            pointer-events: none;
+        }
     
         .item {
             cursor: pointer;
