@@ -205,8 +205,9 @@ import { MempoolActionComponent } from './mempool/mempool-action/mempool-action.
       WalletsEffects,
     ]),
 
+    // Temp: disable so we can debug speed
     // https://github.com/zalmoxisus/redux-devtools-extension
-    !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 50 }) : [],
+    // !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 50 }) : [],
 
     MatAutocompleteModule,
     MatButtonModule,

@@ -50,11 +50,13 @@
 
         color: white;
     }
-
+    
+    /* TODO: temporary disabled
     .item:hover {
         background-color: #8C6141;
-        /* #204E8A; */
     }
+    */
+    /* #204E8A; */
 
     .virtual-scroll-container-detail {
         align-items: flex-end;
@@ -99,9 +101,11 @@
         <div class="virtual-scroll-container">
             <ng-template vsFor let-event [vsForOf]="virtualScrollItems" let-position="position"
                 (getItems)="getItems($event)">
-                <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2"
-                    (mouseenter)="tableMouseEnter(event)" [class.hover]="event?.id === networkActionItem?.id">
+                <span class="item" [style.top.px]="position" [class.virtualScrollRowEven]="event.index % 2">
                     
+                    <!-- TODO: Temp disable hover -->
+                    <!-- (mouseenter)="tableMouseEnter(event)" [class.hover]="event?.id === networkActionItem?.id" -->
+
                     <!-- For debug only TODO: remove later-->
                     <span style="display: inline-block; min-width: 100px;">
                         {{ event.index }}
@@ -140,13 +144,13 @@
                 </span>
             </ng-template>
         </div>
-        
-        <div class="virtual-scroll-container-detail">
+        <!--- TODO: temporary disable -->
+        <!-- <div class="virtual-scroll-container-detail">
             <div *ngIf="networkActionItem?.payload">
                 <ngx-json-viewer [json]="networkActionItem?.payload" [expanded]="false">
                 </ngx-json-viewer>
             </div>
-        </div>
+        </div> -->
 
     </div>
 
