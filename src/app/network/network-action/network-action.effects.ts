@@ -16,7 +16,7 @@ export class NetworkActionEffects {
 
         // merge state
         withLatestFrom(this.store, (action: any, state) => ({ action, state })),
-
+        // tap((action) => console.log('[NETWORK_ACTION_LOAD]', action )),
         switchMap(({ action, state }) => {
             return this.http.get(
                 state.settingsNode.api.debugger +
@@ -163,6 +163,6 @@ export function networkActionCursor(action, state) {
     const cursor = action.payload && action.payload.cursor_id && state.networkAction.ids.length > 0 ?
         'cursor_id=' + action.payload.cursor_id + '&' : '';
 
-    return cursor + 'limit=1000';
+    return cursor + 'limit=100';
 
 }

@@ -28,7 +28,9 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
     private viewportHeight = 0;
 
-    private cacheRequestIds = {};
+    // private cacheRequestIds = {};
+    private cacheRequestStart = 0;
+    private cacheRequestEnd = 0;
     private cacheItemsIds = new Set();
     private cacheItemsEntities = {};
 
@@ -51,7 +53,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log('[ngOnChanges]', changes);
+        // console.log('[ngOnChanges]', changes);
 
         if (this.virtualScrollItemsCount > 0) {
             this.renderViewportItems();
@@ -141,19 +143,36 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             const requestPositionOffset = this.getRequestPositionOffset();
 
             // if current request position not in cached positions
-            if (!this.cacheRequestIds.hasOwnProperty(requestPositionOffset)) {
+            // if (!this.cacheRequestIds.hasOwnProperty(requestPositionOffset)) {
 
-                // render blank rows in correct position while data loading
-                // this.renderBlankViewportItems();
+            // render blank rows in correct position while data loading
+            // this.renderBlankViewportItems();
 
-                // console.log('[onScroll] emit getItems');
-                // emit event to load data
-                this.getItems.emit({
-                    start: this.virtualScrollItemsOffset + this.scrollPositionStart,
-                    end: this.virtualScrollItemsOffset + this.scrollPositionEnd
+            // emit event to load data
+            if ((this.cacheRequestStart > this.scrollPositionEnd) ||
+                (this.cacheRequestEnd   < this.scrollPositionStart)) {
+
+                // console.warn('[onScroll] run');
+                // console.log('[onScroll] cacheRequestStart=' + this.cacheRequestStart + ' scrollPositionEnd=' + this.scrollPositionEnd);
+                // console.log('[onScroll] cacheRequestEnd='   + this.cacheRequestEnd   + ' scrollPositionEnd=' + this.scrollPositionStart);
+
+                this.ngZone.run(() => {
+
+                    // cache request position
+                    this.cacheRequestStart = this.scrollPositionStart;
+                    this.cacheRequestEnd = this.scrollPositionEnd;
+
+                    this.getItems.emit({
+                        start: this.virtualScrollItemsOffset + this.scrollPositionStart,
+                        end: this.virtualScrollItemsOffset + this.scrollPositionEnd
+                    });
+
                 });
-            } else {
+
             }
+
+            // } else {
+            // }
             this.renderViewportItems();
 
             // }
@@ -168,22 +187,22 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     private clear() {
-        console.log('[clear]');
+        // console.log('[clear]');
 
         // clear cache
-        this.cacheRequestIds = {};
+        // this.cacheRequestIds = {};
         this.cacheItemsIds = new Set();
         this.cacheItemsEntities = {};
         // this.viewContainer.clear();
     }
 
     private load() {
-        console.log('[load]');
+        // console.log('[load]');
 
         this.clear();
 
         // set row height in virtual scroll
-        console.log('[load] this.itemHeight=' + this.itemHeight);
+        // console.log('[load] this.itemHeight=' + this.itemHeight);
         this.itemHeight = 36;
 
         // get number of items in virtual scroll
@@ -222,8 +241,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
 
         // mark current scroll position as cached
-        const requestPositionOffset = this.getRequestPositionOffset();
-        this.cacheRequestIds[requestPositionOffset] = true;
+        // const requestPositionOffset = this.getRequestPositionOffset();
+        // this.cacheRequestIds[requestPositionOffset] = true;
 
         // loop through embedded views and change their contents
         for (let index = 0; index < this.embeddedViews.length; index++) {
@@ -239,11 +258,11 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             }
 
             // If needed entity not present anywhere
-            if (!this.vsForOf.entities.hasOwnProperty(virutalScrollPosition) && !this.cacheItemsIds.has(virutalScrollPosition)) {
-                // remove this position from cached positions
-                const requestPositionOffset = this.getRequestPositionOffset();
-                delete this.cacheRequestIds[requestPositionOffset];
-            }
+            // if (!this.vsForOf.entities.hasOwnProperty(virutalScrollPosition) && !this.cacheItemsIds.has(virutalScrollPosition)) {
+            //     // remove this position from cached positions
+            //     const requestPositionOffset = this.getRequestPositionOffset();
+            //     delete this.cacheRequestIds[requestPositionOffset];
+            // }
 
             // const view = this.viewContainer.createEmbeddedView(this.template);
             // const view = this.viewContainer.get(index);
@@ -264,9 +283,9 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         }
 
         // schedule change detection to run at the start of the frame.
-        // requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
             this.ngZone.run(() => { });
-        // });
+        });
 
         // })
         // });

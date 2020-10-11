@@ -60,7 +60,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
         this.virtualScrollItems = data;
         this.changeDetector.markForCheck();
 
-        console.log('[networkAction] data', data);
+        // console.log('[networkAction] data', data);
         if (this.networkActionlastCursorId < data.lastCursorId) {
 
           // console.log('[networkAction]', this.networkActionlastCursorId, data.lastCursorId);
@@ -91,7 +91,8 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
 
   getItems($event) {
 
-    console.warn('[mempool-action][getItems]', $event);
+    // console.warn('[mempool-action][getItems]', $event);
+
     this.store.dispatch({
       type: 'NETWORK_ACTION_LOAD',
       payload: {
