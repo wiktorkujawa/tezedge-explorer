@@ -249,13 +249,13 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             const virutalScrollPosition = this.virtualScrollItemsOffset + index + this.scrollPositionStart;
 
             // cache value
-            if (this.vsForOf.entities.hasOwnProperty(virutalScrollPosition) && !this.cacheItemsIds.has(virutalScrollPosition)) {
-                this.cacheItemsEntities = {
-                    ...this.cacheItemsEntities,
-                    [virutalScrollPosition]: this.vsForOf.entities[virutalScrollPosition],
-                };
-                this.cacheItemsIds.add(virutalScrollPosition);
-            }
+            // if (this.vsForOf.entities.hasOwnProperty(virutalScrollPosition) && !this.cacheItemsIds.has(virutalScrollPosition)) {
+            //     this.cacheItemsEntities = {
+            //         ...this.cacheItemsEntities,
+            //         [virutalScrollPosition]: this.vsForOf.entities[virutalScrollPosition],
+            //     };
+            //     this.cacheItemsIds.add(virutalScrollPosition);
+            // }
 
             // If needed entity not present anywhere
             // if (!this.vsForOf.entities.hasOwnProperty(virutalScrollPosition) && !this.cacheItemsIds.has(virutalScrollPosition)) {
@@ -275,8 +275,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             view.context.index = index + this.scrollPositionStart;
             view.context.$implicit = {
                 index: virutalScrollPosition,
-                // ...this.vsForOf.entities[virutalScrollPosition]
-                ...this.cacheItemsEntities[virutalScrollPosition],
+                ...this.vsForOf.entities[virutalScrollPosition]
+                // ...this.cacheItemsEntities[virutalScrollPosition],
             };
 
             view.markForCheck();
