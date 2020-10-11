@@ -29,3 +29,39 @@
     min-width: 180px; 
     color: #ffffffcc
 }
+
+.item-loading {
+    display: flex;
+    // background-color: #3a3b3d; 
+    background-color: #323334;
+    min-width: calc(100% - 15px) !important;
+
+    animation: hintloading 2s ease-in-out 0s infinite reverse;
+    -webkit-animation: hintloading 2s ease-in-out 0s infinite reverse;
+}
+
+@keyframes hintloading
+{
+  0% {
+    opacity: 0.0;
+  }
+  50%  {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.0;
+  }
+}
+
+@-webkit-keyframes hintloading
+{
+  0% {
+    opacity: 0.0;
+  }
+  50%  {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.0;
+  }
+}
