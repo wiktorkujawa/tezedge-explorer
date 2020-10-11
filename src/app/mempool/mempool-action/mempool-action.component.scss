@@ -1,0 +1,31 @@
+.mempool-action-id {
+    display: inline-block;
+    min-width: 100px;
+}
+
+.mempool-action-load {
+    display: inline-block;
+    min-width: 100px;
+}
+
+.mempool-action-datetime {
+    display: inline-block;
+    min-width: 180px;
+    color: #ffffffcc
+}
+
+.mempool-action-remote-addr {
+    display: inline-block;
+    min-width: 180px;
+}
+
+.mempool-action-remote-addr a {
+    color: #ffffffcc;
+    text-decoration:none;
+}
+
+.mempool-action-type {
+    display: inline-block;
+    min-width: 180px; 
+    color: #ffffffcc
+}

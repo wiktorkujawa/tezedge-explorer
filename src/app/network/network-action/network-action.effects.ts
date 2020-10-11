@@ -163,6 +163,6 @@ export function networkActionCursor(action, state) {
     const cursor = action.payload && action.payload.cursor_id && state.networkAction.ids.length > 0 ?
         'cursor_id=' + action.payload.cursor_id + '&' : '';
 
-    return cursor + 'limit=100';
+    return cursor + 'limit=1000';
 
 }

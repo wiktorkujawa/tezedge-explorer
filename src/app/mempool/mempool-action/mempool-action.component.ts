@@ -91,7 +91,7 @@ export class MempoolActionComponent implements OnInit, OnDestroy {
 
   getItems($event) {
 
-    console.warn('[mempool-action][onScroll]', $event);
+    console.warn('[mempool-action][getItems]', $event);
     this.store.dispatch({
       type: 'NETWORK_ACTION_LOAD',
       payload: {
