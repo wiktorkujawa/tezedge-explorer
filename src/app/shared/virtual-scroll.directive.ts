@@ -56,7 +56,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log('[ngOnChanges]', changes);
+        // console.log('[ngOnChanges]', changes);
         
         if (this.virtualScrollItemsCount > 0) {
             // change offset if new item loaded (via live stream)
@@ -104,8 +104,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         // load all virtual scroll date
         this.load();
 
-        console.log('[scrollToBottom] this.virtualScrollItemsCount=' + this.virtualScrollItemsCount
-            + ' this.itemHeight=' + this.itemHeight);
+        // console.log('[scrollToBottom] this.virtualScrollItemsCount=' + this.virtualScrollItemsCount
+        //     + ' this.itemHeight=' + this.itemHeight);
 
         // set scroll to latest item in list
         this.$viewport.scrollTop = this.virtualScrollItemsCount * this.itemHeight;
@@ -122,7 +122,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
 
             // trigger only if user scrolled vertically
             if(this.prevScrollTop != currentScrollTop){
-                console.log('[onScroll]');
+                // console.log('[onScroll]');
 
                 // If scroll is not at the bottom (end) - emit scroll changed event
                 // console.error(this.viewportScrollHeight - currentScrollTop > Math.ceil(this.viewportHeight), this.viewportScrollHeight - currentScrollTop, Math.ceil(this.viewportHeight) )
@@ -162,7 +162,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
                         // render blank rows in correct position while data loading
                         // this.renderBlankViewportItems();
 
-                        console.log('[onScroll] emit getItems');
+                        // console.log('[onScroll] emit getItems');
                         // emit event to load data
                         this.getItems.emit({
                             start: this.virtualScrollItemsOffset + this.scrollPositionStart,
@@ -196,7 +196,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     private clear() {
-        console.log('[clear]');
+        // console.log('[clear]');
 
         // clear cache
         this.cacheRequestIds = {};
@@ -206,16 +206,16 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
     }
 
     private load() {
-        console.log('[load]');
+        // console.log('[load]');
 
         // TODO: should we clear on load?
         this.clear();
 
         // set row height in virtual scroll
-        console.log('[load] this.itemHeight=' + this.itemHeight);
+        // console.log('[load] this.itemHeight=' + this.itemHeight);
 
         // get number of items in virtual scroll
-        console.log('[load] vsForOf.lastCursorId=', this.vsForOf.lastCursorId);
+        // console.log('[load] vsForOf.lastCursorId=', this.vsForOf.lastCursorId);
         this.virtualScrollItemsCount = (this.vsForOf.lastCursorId * this.itemHeight) > this.maxScrollHeight
             ? Math.floor(this.maxScrollHeight / this.itemHeight) : this.vsForOf.lastCursorId;
 
@@ -225,7 +225,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         this.$scroller.style.height = `${this.maxScrollHeight}px`;
         this.viewportScrollHeight = this.$viewport.scrollHeight;
 
-        console.log('[load] this.virtualScrollHeight=' + this.virtualScrollHeight + ' this.maxScrollHeight=' + this.maxScrollHeight);
+        // console.log('[load] this.virtualScrollHeight=' + this.virtualScrollHeight + ' this.maxScrollHeight=' + this.maxScrollHeight);
 
         // this.$viewport.dispatchEvent(new Event('scroll'));
     }
@@ -234,11 +234,11 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         // this.ngZone.runOutsideAngular(() => {
         // requestAnimationFrame(() => {
 
-        console.warn('[renderViewportItems]');
+        // console.warn('[renderViewportItems]');
         // TODO: move this from here into some init function (needs to be after scrollPositionStart and End are set)
         if(!this.viewContainer.length){
             // Initialize viewContainer with all need views (rows)
-            console.warn(`[renderViewportItems] viewContainer init (${this.scrollPositionEnd - this.scrollPositionStart} views)`);
+            // console.warn(`[renderViewportItems] viewContainer init (${this.scrollPositionEnd - this.scrollPositionStart} views)`);
             for (let index = 0; index < (this.scrollPositionEnd - this.scrollPositionStart); index++) {
                 const view = this.viewContainer.createEmbeddedView(this.template);
                 this.embeddedViews.push(view);
@@ -246,8 +246,8 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
         }
 
         // console.warn('[renderViewportItems] this.vsForOf=', this.vsForOf.ids);
-        console.log('[renderViewportItems]  this.scrollPositionStart=' + this.scrollPositionStart
-            + ' this.scrollPositionEnd=' + this.scrollPositionEnd);
+        // console.log('[renderViewportItems]  this.scrollPositionStart=' + this.scrollPositionStart
+            // + ' this.scrollPositionEnd=' + this.scrollPositionEnd);
 
 
         // mark current scroll position as cached
@@ -331,7 +331,7 @@ export class VirtualScrollDirective implements AfterViewInit, OnDestroy, OnChang
             document.body.appendChild(div);
             const size = div.getBoundingClientRect().top;
             document.body.removeChild(div);
-            console.log('[getMaxBrowserScrollSize] max number of items: ', Math.abs(Math.floor(size / this.itemHeight)));
+            // console.log('[getMaxBrowserScrollSize] max number of items: ', Math.abs(Math.floor(size / this.itemHeight)));
             return Math.abs(Math.floor(size / 10));
 
         } else {
