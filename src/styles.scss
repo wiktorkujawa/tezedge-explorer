@@ -1695,7 +1695,7 @@ input.mat-input-element {
         overflow: auto;
         z-index: 999;
 
-        &.disable-hover{
+        &.disable-hover *{
             pointer-events: none;
         }
     
