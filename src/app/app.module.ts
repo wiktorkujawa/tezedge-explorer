@@ -118,6 +118,8 @@ import { MempoolComponent } from './mempool/mempool.component';
 import { MempoolActionComponent } from './mempool/mempool-action/mempool-action.component';
 import { CommitNumberComponent } from './monitoring/commit-number/commit-number.component';
 import { CommitNumberEffects } from './monitoring/commit-number/commit-number.effects';
+import { ResourcesEffects } from './resources/state/resources.effects';
+import { TezedgeSharedModule } from './shared/tezedge-shared.module';
 
 @NgModule({
   declarations: [
@@ -206,7 +208,8 @@ import { CommitNumberEffects } from './monitoring/commit-number/commit-number.ef
       SettingsNodeEffects,
       SandboxEffects,
       WalletsEffects,
-      CommitNumberEffects
+      CommitNumberEffects,
+      ResourcesEffects,
     ]),
 
     // https://github.com/zalmoxisus/redux-devtools-extension
@@ -250,7 +253,8 @@ import { CommitNumberEffects } from './monitoring/commit-number/commit-number.ef
     ReactiveFormsModule,
     // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
 
-    NgxJsonViewerModule
+    NgxJsonViewerModule,
+    TezedgeSharedModule
 
   ],
   providers: [],

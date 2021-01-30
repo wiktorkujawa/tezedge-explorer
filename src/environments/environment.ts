@@ -6,6 +6,7 @@ export const environment = {
       name: 'develop.dev.tezedge',
       http: 'http://develop.dev.tezedge.com:18732',
       debugger: 'http://develop.dev.tezedge.com:17732',
+      watchdog: 'http://develop.dev.tezedge.com:38732',
       ws: false
     }
     // {

@@ -1,0 +1,68 @@
+
+.resources-container {
+  margin-left: auto;
+  margin-right: auto;
+
+  .resources-title {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 300;
+    font-size: 24px;
+    //margin: 40px 0 60px;
+    margin: 20px 0 40px;
+  }
+
+  .centered-container {
+    max-width: 1300px !important;
+    width: 100%;
+    margin: 0 auto;
+
+    .resource-category-block {
+      //min-height: 173px;
+      min-height: 240px;
+
+      .resource-overview-data {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        height: 145px;
+        //height: 212px;
+
+        .resource-type {
+          color: #fff;
+          padding: 12px 15px;
+          font-size: 12px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .resources-type-values {
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 12px;
+          padding: 15px;
+          line-height: 14px;
+
+          .resource-blue {
+            color: #46AFE3;
+          }
+
+          .resource-purple {
+            color: #DF80FF;
+          }
+        }
+      }
+
+      .chart-wrapper {
+
+        ::ng-deep {
+          color: rgba(255, 255, 255, 0.6);
+          fill: rgba(255, 255, 255, 0.6);
+
+          .gridline-path {
+            stroke: rgba(255, 255, 255, 0.1);
+          }
+
+          .chart-legend .legend-label .active .legend-label-text {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}

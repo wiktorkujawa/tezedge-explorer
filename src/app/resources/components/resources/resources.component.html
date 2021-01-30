@@ -1,0 +1,135 @@
+<div fxFlexFill
+     fxLayout="column"
+     fxLayoutAlign="start stretch"
+     class="resources-container">
+  <div fxLayoutAlign="center"
+       class="resources-title">Resources
+  </div>
+  <div fxFlex="grow"
+       fxLayout="column"
+       fxLayoutAlign="start stretch"
+       fxLayoutGap="30px"
+       class="centered-container">
+    <div fxLayout="row"
+         fxLayoutGap="10px"
+         class="resource-category-block">
+      <div fxFlex="165px"
+           class="resource-overview-data">
+        <div class="resource-type">CPU</div>
+        <div class="resources-type-values"
+             fxLayout="column"
+             fxLayoutGap="15px">
+          <div fxLayout="row"
+               class="resource-blue">
+            <span fxFlex="45">Load</span>
+            <span>60%</span>
+          </div>
+          <div fxLayout="row">
+            <span fxFlex="45">Idle</span>
+            <span>40%</span>
+          </div>
+        </div>
+      </div>
+      <div fxFlex="grow"
+           class="chart-wrapper"
+           *ngIf="chartData$ | async as chartData">
+        <app-tezedge-line-chart *ngIf="chartData?.cpu[0].series.length"
+                                [extraYAxisValues]="50"
+                                [results]="chartData.cpu"
+                                [circleAtTheEnd]="true"
+                                [tooltipDisabled]="true"
+                                [scheme]="colorScheme"
+                                [legend]="false"
+                                [legendTitle]="null"
+                                [xAxis]="true"
+                                [yAxis]="true"
+                                [timeline]="false"
+                                [animations]="false"
+                                [curve]="curve">
+        </app-tezedge-line-chart>
+      </div>
+    </div>
+    <div fxLayout="row"
+         fxLayoutGap="10px"
+         class="resource-category-block">
+      <div fxFlex="165px"
+           class="resource-overview-data">
+        <div class="resource-type">RAM</div>
+        <div class="resources-type-values"
+             fxLayout="column"
+             fxLayoutGap="15px">
+          <div class="resource-blue">
+            <span fxFlex="45">Load</span>
+            <span>60%</span>
+          </div>
+          <div fxLayout="row">
+            <span fxFlex="45">Used</span>
+            <span>20.05 GB</span>
+          </div>
+          <div fxLayout="row">
+            <span fxFlex="45">Total</span>
+            <span>32.00 GB</span>
+          </div>
+        </div>
+      </div>
+      <div fxFlex="grow"
+           class="chart-wrapper"
+           *ngIf="chartData$ | async as chartData">
+        <app-tezedge-line-chart *ngIf="chartData?.memory[0].series.length"
+                                [extraYAxisValues]="1000000000"
+                                [results]="chartData.memory"
+                                [circleAtTheEnd]="true"
+                                [tooltipDisabled]="true"
+                                [scheme]="colorScheme"
+                                [legend]="false"
+                                [legendTitle]="null"
+                                [xAxis]="true"
+                                [yAxis]="true"
+                                [timeline]="false"
+                                [animations]="false"
+                                [curve]="curve">
+        </app-tezedge-line-chart>
+      </div>
+    </div>
+    <div fxLayout="row"
+         fxLayoutGap="10px"
+         class="resource-category-block">
+      <div fxFlex="165px"
+           class="resource-overview-data">
+        <div class="resource-type">DISK</div>
+        <div class="resources-type-values"
+             fxLayout="column"
+             fxLayoutGap="15px">
+          <div class="resource-blue"
+               fxLayout="row">
+            <span fxFlex="45">Reads in</span>
+            <span>60%</span>
+          </div>
+          <div class="resource-purple"
+               fxLayout="row">
+            <span fxFlex="45">Writes out</span>
+            <span>20.05 GB</span>
+          </div>
+        </div>
+      </div>
+      <div fxFlex="grow"
+           class="chart-wrapper"
+           *ngIf="chartData$ | async as chartData">
+        <app-tezedge-line-chart *ngIf="chartData?.disk[0].series.length"
+                                [extraYAxisValues]="10000000000"
+                                [results]="chartData.disk"
+                                [circleAtTheEnd]="true"
+                                [tooltipDisabled]="true"
+                                [scheme]="colorScheme"
+                                [legend]="false"
+                                [legendTitle]="null"
+                                [xAxis]="true"
+                                [yAxis]="true"
+                                [timeline]="false"
+                                [animations]="false"
+                                [curve]="curve">
+        </app-tezedge-line-chart>
+      </div>
+    </div>
+  </div>
+</div>
