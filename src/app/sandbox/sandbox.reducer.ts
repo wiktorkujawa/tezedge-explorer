@@ -102,7 +102,7 @@ export function mapChainServerForEndpoint(formData: any){
         identity_expected_pow: formData.identityExpectedPow,
         disable_bootstrap_lookup: !formData.bootstrapLookupAddresses ? '' : undefined,
         bootstrap_lookup_address: formData.bootstrapLookupAddresses ? formData.bootstrapLookupAddresses : undefined,
-        disable_mempool: !formData.mempool,
+        // disable_mempool: !formData.mempool,
         network: 'sandbox',
         peer_thresh_low: formData.lowerPeerTreshold,
         peer_thresh_high: formData.higherPeerTreshold,

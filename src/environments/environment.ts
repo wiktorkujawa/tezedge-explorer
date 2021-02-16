@@ -7,7 +7,7 @@ export const environment = {
       http: 'http://develop.dev.tezedge.com:18732',
       debugger: 'http://develop.dev.tezedge.com:17732',
       ws: false
-    }
+    },
     // {
     //   id: 'local-carthage-tezedge',
     //   name: 'ocaml.localhost.node',
@@ -50,14 +50,14 @@ export const environment = {
     //   debugger: 'https://carthage.tezedge.com:8743',
     //   ws: false,
     // },
-    // {
-    //   id: 'sandbox-carthage-tezedge',
-    //   name: 'rust.localhost.node',
-    //   http: 'http://127.0.0.1:18732',
-    //   debugger: 'http://127.0.0.1:17732',
-    //   ws: 'ws://127.0.0.1:4927',
-    // },
+    {
+      id: 'sandbox-carthage-tezedge',
+      name: 'rust.localhost.node',
+      http: 'http://127.0.0.1:18732',
+      debugger: 'http://127.0.0.1:17732',
+      ws: 'ws://127.0.0.1:4927',
+    },
   ],
-  sandbox: 'http://127.0.0.1:3030',
+  sandbox: 'http://sandbox.dev.tezedge.com:3030',
   commit: 'local-test-text'
 };
