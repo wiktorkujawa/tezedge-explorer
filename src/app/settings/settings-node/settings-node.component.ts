@@ -30,6 +30,7 @@ export class SettingsNodeComponent implements OnInit {
           this.settingsNodeApi = state.entities[state.api.id];
           this.settingsNodeEntities = state.ids.map(id => state.entities[id]);
           this.stateEntities = state.entities;
+          console.log(this.settingsNodeApi);
         }
       });
 

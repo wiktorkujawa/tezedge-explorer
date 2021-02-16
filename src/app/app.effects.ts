@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { tap, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AppEffects {
@@ -29,7 +30,7 @@ export class AppEffects {
 
             let redirectUrl = '';
             if (action.payload.connected) {
-                if (action.payload.id === 'sandbox-carthage-tezedge') {
+                if (environment.api.find( e => e.id === action.payload.id).feature.sandbox===true) {
                     redirectUrl = 'wallets';
                 }
                 else if (action.payload.ws === false) {

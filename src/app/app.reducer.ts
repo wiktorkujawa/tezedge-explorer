@@ -1,3 +1,5 @@
+import { environment } from "src/environments/environment";
+
 const initialState = {
 
     user: {
@@ -117,8 +119,8 @@ export function reducer(state = initialState, action) {
                 explorerNetwork = true;
                 explorerLogs = true;
             }
-
-            if (action.payload.id === 'sandbox-carthage-tezedge') {
+            // action.payload.id === 'sandbox-carthage-tezedge'
+            if (environment.api.find( e => e.id === action.payload.id).feature.sandbox===true) {
                 sandboxChain = true;
                 sandboxWallets = true;
 
@@ -146,7 +148,8 @@ export function reducer(state = initialState, action) {
                     }
                 },
                 statusbar: {
-                    sandbox: action.payload.id === 'sandbox-carthage-tezedge',
+                  // action.payload.id === 'sandbox-carthage-tezedge'
+                    sandbox: environment.api.find( e => e.id === action.payload.id).feature.sandbox===true,
                 }
             };
         }

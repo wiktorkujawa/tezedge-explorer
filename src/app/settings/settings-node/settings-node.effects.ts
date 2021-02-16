@@ -82,7 +82,8 @@ export class SettingsNodeEffects {
         withLatestFrom(this.store, (action: any, state) => ({ action, state })),
 
         flatMap(({ action, state }) => {
-            return of({ type: 'APP_INIT', payload: state.settingsNode.entities['sandbox-carthage-tezedge'] });
+            // return of({ type: 'APP_INIT', payload: state.settingsNode.entities['sandbox-carthage-tezedge'] });
+            return of({ type: 'APP_INIT', payload: state.settingsNode.api.feature.sandbox ? state.settingsNode.api : null  });
         }),
     );
 
